@@ -6,11 +6,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { ScreenNameList } from '../constants/ParamList';
 import { PlayerCard } from '../components/PlayerCard';
-import Colors from '../constants/Colors';
+import colors from '../constants/Colors';
+import Score from '../state/Score';
 
 const window = Dimensions.get('window');
 
-const Main: React.FC = (props) => {
+const Scoring: React.FC = (props) => {
   const [dimensions, setDimensions] = useState({
     height: window.height,
     width: window.width,
@@ -21,24 +22,37 @@ const Main: React.FC = (props) => {
   const [points, setPoints] = useState([0, 0]);
   const [bags, setBags] = useState([0, 0]);
 
+  const score = Score.useContainer();
+
   const navigation: StackNavigationProp<
     ScreenNameList,
-    'Main'
+    'Scoring'
   > = useNavigation();
 
   navigation.setOptions({
     headerRight: () => (
-      <Icon
-        name='chart-bar'
-        type='material-community'
-        size={35}
-        color='white'
-        onPress={() => navigation.navigate('ScoreBoard')}
-        containerStyle={{ marginRight: 10 }}
-      />
+      <View style={{ flexDirection: 'row' }}>
+        <Icon
+          name='chart-bar'
+          type='material-community'
+          size={30}
+          color='white'
+          onPress={() => navigation.navigate('ScoreBoard')}
+          containerStyle={{ marginRight: 15 }}
+        />
+        <Icon
+          name='settings'
+          type='material-community'
+          size={30}
+          color='white'
+          onPress={() => navigation.navigate('Settings')}
+          containerStyle={{ marginRight: 10 }}
+        />
+      </View>
     ),
   });
 
+  // adjust Dimensions on change (e.g. rotate)
   const onChange = ({ window, screen }) => {
     setDimensions({ height: window.height, width: window.width });
   };
@@ -51,8 +65,20 @@ const Main: React.FC = (props) => {
   });
 
   useEffect(() => {
-    console.log(bids, tricks);
+    //console.log(bids, tricks);
   }, [bids, tricks]);
+
+  // check if bags exceed 10
+  useEffect(() => {
+    if (bags[0] >= 10) {
+      setPoints([points[0] - 100, points[1]]);
+      setBags([bags[0] - 10, bags[1]]);
+    }
+    if (bags[1] >= 10) {
+      setPoints([points[0], points[1] - 100]);
+      setBags([bags[0], bags[1] - 10]);
+    }
+  }, [bags]);
 
   // get team from index
   const team = (i) => {
@@ -61,10 +87,10 @@ const Main: React.FC = (props) => {
     else return -1;
   };
 
+  // is called when hitting the finish round button. Calculates new points
   const finishRound = () => {
     if (bids.includes('-') || tricks.includes('-')) {
       alert('Fill in all Bids and Tricks before finishing the round.');
-      console.log(parseInt('00'));
       return;
     }
 
@@ -74,7 +100,7 @@ const Main: React.FC = (props) => {
     let iBids = bids.map((x) => parseInt(x));
     let iTricks = tricks.map((x) => parseInt(x));
 
-    // double zero games
+    // double zero and zero games
 
     for (let i = 0; i < 4; i++) {
       if (bids[i] === '00' && iTricks[i] === 0) {
@@ -90,6 +116,8 @@ const Main: React.FC = (props) => {
         newPoints[team(i)] -= 100;
       }
     }
+
+    // non-zero games
 
     if (iBids[0] + iBids[3] <= iTricks[0] + iTricks[3]) {
       newPoints[0] += (iBids[0] + iBids[3]) * 10;
@@ -109,10 +137,21 @@ const Main: React.FC = (props) => {
       newPoints[1] -= (iBids[1] + iBids[2]) * 10;
     }
 
-    setPoints([
+    let nextPoints: number[] = [
       points[0] + newPoints[0] + newBags[0],
       points[1] + newPoints[1] + newBags[1],
-    ]);
+    ];
+
+    let line: (string | number)[] = [];
+    for (let i = 0; i < 4; i++) {
+      line.push(bids[i]);
+      line.push(tricks[i]);
+    }
+    line.push(newPoints[0] + newBags[0]);
+    line.push(newPoints[1] + newBags[1]);
+    score.addScoreLine(line);
+
+    setPoints(nextPoints);
 
     setBags([bags[0] + newBags[0], bags[1] + newBags[1]]);
 
@@ -120,6 +159,7 @@ const Main: React.FC = (props) => {
     setTricks(['-', '-', '-', '-']);
   };
 
+  // handle changes to big and tricks dropdowns
   const handleBidChange = (text, idx) => {
     setBids(
       bids.map((x, index) => {
@@ -136,21 +176,20 @@ const Main: React.FC = (props) => {
     );
   };
 
+  // calculate dimensions of PlayerCard
   const tileDimensions = calcTileDimensions(
     dimensions.height,
     dimensions.width,
     2
   );
 
-  const players = [1, 2, 3, 4].map((i) => `Player ${i}`);
-
   return (
     <View style={styles.backDrop}>
       <View style={styles.container}>
-        {players.map((i, idx) => (
+        {[1, 2, 3, 4].map((i, idx) => (
           <PlayerCard
-            key={i}
-            name={`Player ${i}`}
+            key={i.toString()}
+            playerNumber={i}
             bidValue={bids[idx]}
             tricksValue={tricks[idx]}
             onChangeBid={(text) => handleBidChange(text, idx)}
@@ -180,6 +219,7 @@ const Main: React.FC = (props) => {
   );
 };
 
+// calculate dimensions helper
 const calcTileDimensions = (windowHeight, windowWidth, tpr) => {
   const margin: number = (windowHeight / tpr) * 0.015;
   const height: number =
@@ -188,12 +228,12 @@ const calcTileDimensions = (windowHeight, windowWidth, tpr) => {
   return { height, width, margin };
 };
 
-export default Main;
+export default Scoring;
 
 const styles = StyleSheet.create({
   backDrop: {
     flex: 1,
-    backgroundColor: Colors.backDropColor,
+    backgroundColor: colors.backDropColor,
   },
   container: {
     justifyContent: 'flex-start',
@@ -202,6 +242,6 @@ const styles = StyleSheet.create({
   },
   sbButton: {
     height: 45,
-    backgroundColor: Colors.finishButtonColor,
+    backgroundColor: colors.finishButtonColor,
   },
 });

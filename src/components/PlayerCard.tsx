@@ -1,9 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
 import { CustomDropdown } from './CustomDropdown';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import PlayerNames from '../state/PlayerNames';
 
-export const PlayerCard = props => {
+interface PlayerCardProps {
+  playerNumber: number;
+  bidValue: string;
+  tricksValue: string;
+  onChangeBid: (arg0: string) => void;
+  onChangeTricks: (arg0: string) => void;
+  points: number;
+  bags: number;
+  height: number;
+  width: number;
+  margin: number;
+}
+
+export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
+  let playerNamesC = PlayerNames.useContainer();
+
   return (
     <View
       style={[
@@ -16,27 +31,38 @@ export const PlayerCard = props => {
       ]}
     >
       <View style={styles.headerContainer}>
-        <Text style={styles.heading}>{props.name}</Text>
+        <TextInput
+          autoCompleteType={'off'}
+          autoCorrect={false}
+          allowFontScaling={false}
+          maxLength={20}
+          onChangeText={(text) =>
+            playerNamesC.setName(text, props.playerNumber)
+          }
+          selectTextOnFocus
+          value={playerNamesC.names[props.playerNumber - 1]}
+          style={styles.headingInput}
+        />
       </View>
       <View style={{ flexDirection: 'row' }}>
         <CustomDropdown
           label='Bid'
           data={[{ value: '00' }].concat(
-            Array.from(Array(14).keys()).map(function(val) {
+            Array.from(Array(14).keys()).map(function (val) {
               return { value: val.toString() };
             })
           )}
           value={props.bidValue}
-          onChangeText={text => props.onChangeBid(text)}
+          onChangeText={(text) => props.onChangeBid(text)}
           containerStyle={{ marginRight: 5 }}
         />
         <CustomDropdown
           label='Tricks'
-          data={Array.from(Array(14).keys()).map(function(val) {
+          data={Array.from(Array(14).keys()).map(function (val) {
             return { value: val.toString() };
           })}
           value={props.tricksValue}
-          onChangeText={text => props.onChangeTricks(text)}
+          onChangeText={(text) => props.onChangeTricks(text)}
           containerStyle={{ marginLeft: 5 }}
         />
       </View>
@@ -69,12 +95,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     //backgroundColor: 'yellow',
   },
-  heading: {
+  headingInput: {
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: '700',
     fontSize: 20,
     color: '#ddd',
+    width: 100,
     marginTop: 5,
   },
   rowsContainer: {

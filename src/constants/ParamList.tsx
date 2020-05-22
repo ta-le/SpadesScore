@@ -1,5 +1,6 @@
 export type ScreenNameList = {
   First: undefined;
-  Main: undefined;
+  Scoring: undefined;
   ScoreBoard: undefined;
+  Settings: undefined;
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dropdown } from 'react-native-material-dropdown';
-import Colors from '../constants/Colors';
+import colors from '../constants/Colors';
 
 export const CustomDropdown = (props) => {
   return (
@@ -9,11 +9,12 @@ export const CustomDropdown = (props) => {
       data={props.data}
       animationDuration={0}
       fontSize={19}
-      baseColor={Colors.dropdownBaseColor}
-      textColor={Colors.dropdownBaseColor}
+      baseColor={colors.dropdownBaseColor}
+      textColor={colors.dropdownBaseColor}
       // inactive dropdown items
       itemColor={'#aaa'}
       // active dropdown item
+      selectedItemColor={'#414141'}
       labelFontSize={15}
       //pickerStyle='dialog'
       dropdownOffset={{ top: 32, left: 0 }}
@@ -29,7 +30,8 @@ export const CustomDropdown = (props) => {
         },
         props.containerStyle,
       ]}
-      pickerStyle={{ backgroundColor: Colors.dropdownPickerBackgroundColor }}
+      pickerStyle={{ backgroundColor: colors.dropdownPickerBackgroundColor }}
+      shadeOpacity={0.0}
       value={props.value}
       onChangeText={(text) => props.onChangeText(text)}
     />

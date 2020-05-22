@@ -1143,6 +1143,14 @@
     shortid "^2.2.15"
     use-subscription "^1.4.0"
 
+"@react-navigation/drawer@^5.7.7":
+  version "5.7.7"
+  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-5.7.7.tgz#25d088b7bf53368085bc88a853071e3c14560296"
+  integrity sha512-E/1kcZexfIXC3uLJSokAb5CD4qmOF1udjZ8QzDyzKWgygWk6YhvXX+koCENOvGnslU0HfUH/BCoecxksilJ7kA==
+  dependencies:
+    color "^3.1.2"
+    react-native-iphone-x-helper "^1.2.1"
+
 "@react-navigation/native@^5.1.3":
   version "5.1.3"
   resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-5.1.3.tgz#05c9957a2b4e5b4bd66d389ed71237c2887a80d3"
@@ -2091,11 +2099,6 @@ create-react-class@^15.6.2, create-react-class@^15.6.3:
     fbjs "^0.8.9"
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
-
-create-react-context@^0.1.5:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/create-react-context/-/create-react-context-0.1.6.tgz#0f425931d907741127acc6e31acb4f9015dd9fdc"
-  integrity sha512-eCnYYEUEc5i32LHwpE/W7NlddOB9oHwsPaWtWzYtflNkkwa3IfindIcoXdVWs12zCbwaMCavKNu84EXogVIWHw==
 
 cross-spawn@^5.0.1, cross-spawn@^5.1.0:
   version "5.1.0"
@@ -4513,11 +4516,6 @@ react-native-drawer@2.5.1:
     prop-types "^15.5.8"
     tween-functions "^1.0.1"
 
-react-native-dropdown@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-dropdown/-/react-native-dropdown-0.0.6.tgz#f4b899b4082c4823340c7377fbe73bc01399148d"
-  integrity sha1-9LiZtAgsSCM0DHN3++c7wBOZFI0=
-
 react-native-easy-grid@0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/react-native-easy-grid/-/react-native-easy-grid-0.2.2.tgz#f0be33620be1ebe2d2295918eb58b0a27e8272ab"
@@ -4571,10 +4569,9 @@ react-native-material-buttons@^0.5.0:
     prop-types "^15.5.9"
     react-native-material-ripple "^0.7.0"
 
-react-native-material-dropdown@^0.11.1:
+"react-native-material-dropdown@https://github.com/harshitjee/react-native-material-dropdown.git":
   version "0.11.1"
-  resolved "https://registry.yarnpkg.com/react-native-material-dropdown/-/react-native-material-dropdown-0.11.1.tgz#c0fe434a8e617941ef910ba44d2f07c8f37584fe"
-  integrity sha1-wP5DSo5heUHvkQukTS8HyPN1hP4=
+  resolved "https://github.com/harshitjee/react-native-material-dropdown.git#4ccdf40edd72db4fe7766de37dec8960dabf1dc5"
   dependencies:
     prop-types "^15.5.9"
     react-native-material-buttons "^0.5.0"
@@ -5595,12 +5592,10 @@ unset-value@^1.0.0:
     has-value "^0.3.1"
     isobject "^3.0.0"
 
-unstated@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/unstated/-/unstated-2.1.1.tgz#36b124dfb2e7a12d39d0bb9c46dfb6e51276e3a2"
-  integrity sha512-fORlTWMZxq7NuMJDxyIrrYIZKN7wEWYQ9SiaJfIRcSpsowr6Ph/JIfK2tgtXLW614JfPG/t5q9eEIhXRCf55xg==
-  dependencies:
-    create-react-context "^0.1.5"
+unstated-next@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/unstated-next/-/unstated-next-1.1.0.tgz#7bb4911a12fdf3cc8ad3eb11a0b315e4a8685ea8"
+  integrity sha512-AAn47ZncPvgBGOvMcn8tSRxsrqwf2VdAPxLASTuLJvZt4rhKfDvUkmYZLGfclImSfTVMv7tF4ynaVxin0JjDCA==
 
 urix@^0.1.0:
   version "0.1.0"
