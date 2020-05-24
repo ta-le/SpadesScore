@@ -4,6 +4,7 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { Routes } from './src/screens/Routes';
 import { YellowBox } from 'react-native';
+import GameData from './src/state/GameData';
 
 YellowBox.ignoreWarnings(['componentWillReceiveProps', 'componentWillUpdate']);
 
@@ -24,7 +25,12 @@ const App: React.FC = () => {
   }, []);
 
   if (!isReady) return <AppLoading />;
-  else return <Routes />;
+  else
+    return (
+      <GameData.Provider>
+        <Routes />
+      </GameData.Provider>
+    );
 };
 
 export default App;

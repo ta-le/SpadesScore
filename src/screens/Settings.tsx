@@ -1,33 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import colors from '../constants/Colors';
-import { ListItem } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
+import { ScreenNameList } from '../constants/ParamList';
+import { StackNavigationProp } from '@react-navigation/stack';
+import CustomListItem from '../components/CustomListItem';
+import InputModal from '../components/InputModal';
 
 interface SettingsProps {}
 
-const CustomListItem = (props) => {
-  return (
-    <ListItem
-      titleStyle={{ color: colors.textColor, fontSize: 17, paddingLeft: 15 }}
-      subtitleStyle={{
-        color: colors.subTextColor,
-        fontSize: 14,
-        paddingLeft: 15,
-      }}
-      containerStyle={{ backgroundColor: colors.backDropColor }}
-      leftIcon={{
-        color: '#ddd',
-        size: 27,
-        ...props.icon,
-      }}
-      {...props}
-    />
-  );
-};
-
+// TODO: New Game, Rate App
 const Settings: React.FC<SettingsProps> = () => {
+  const navigation: StackNavigationProp<
+    ScreenNameList,
+    'Settings'
+  > = useNavigation();
+
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+
   return (
     <View style={styles.container}>
+      <InputModal
+        visible={modalVisible}
+        onCancelPress={() => setModalVisible(!modalVisible)}
+        onOKPress={() => setModalVisible(!modalVisible)}
+      />
       <CustomListItem
         title='New Game'
         subtitle='Create a new game'
@@ -43,6 +40,7 @@ const Settings: React.FC<SettingsProps> = () => {
           name: 'content-save',
           type: 'material-community',
         }}
+        onPress={() => setModalVisible(true)}
       />
       <CustomListItem
         title='Save States'
@@ -51,6 +49,7 @@ const Settings: React.FC<SettingsProps> = () => {
           name: 'storage',
           type: 'material',
         }}
+        onPress={() => navigation.navigate('SaveStates')}
       />
       <CustomListItem
         title='Rate App'

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import { CustomDropdown } from './CustomDropdown';
-import PlayerNames from '../state/PlayerNames';
+import GameData from '../state/GameData';
 
 interface PlayerCardProps {
   playerNumber: number;
@@ -17,7 +17,7 @@ interface PlayerCardProps {
 }
 
 export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
-  let playerNamesC = PlayerNames.useContainer();
+  let gameData = GameData.useContainer();
 
   return (
     <View
@@ -36,11 +36,9 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
           autoCorrect={false}
           allowFontScaling={false}
           maxLength={20}
-          onChangeText={(text) =>
-            playerNamesC.setName(text, props.playerNumber)
-          }
+          onChangeText={(text) => gameData.setName(text, props.playerNumber)}
           selectTextOnFocus
-          value={playerNamesC.names[props.playerNumber - 1]}
+          value={gameData.names[props.playerNumber - 1]}
           style={styles.headingInput}
         />
       </View>

@@ -11,6 +11,8 @@ const colors = {
   subTextColor: '#b5b5b5',
   dropdownBaseColor: '#ddd',
   dropdownPickerBackgroundColor: '#414141',
+
+  sectionTextColor: '#ca3e47',
 };
 
 export default colors;

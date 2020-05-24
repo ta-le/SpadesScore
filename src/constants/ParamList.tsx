@@ -3,4 +3,5 @@ export type ScreenNameList = {
   Scoring: undefined;
   ScoreBoard: undefined;
   Settings: undefined;
+  SaveStates: undefined;
 };

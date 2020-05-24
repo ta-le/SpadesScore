@@ -7,7 +7,7 @@ import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { ScreenNameList } from '../constants/ParamList';
 import { PlayerCard } from '../components/PlayerCard';
 import colors from '../constants/Colors';
-import Score from '../state/Score';
+import GameData from '../state/GameData';
 
 const window = Dimensions.get('window');
 
@@ -19,10 +19,8 @@ const Scoring: React.FC = (props) => {
 
   const [bids, setBids] = useState<string[]>(['-', '-', '-', '-']);
   const [tricks, setTricks] = useState<string[]>(['-', '-', '-', '-']);
-  const [points, setPoints] = useState([0, 0]);
-  const [bags, setBags] = useState([0, 0]);
 
-  const score = Score.useContainer();
+  const gameData = GameData.useContainer();
 
   const navigation: StackNavigationProp<
     ScreenNameList,
@@ -70,15 +68,20 @@ const Scoring: React.FC = (props) => {
 
   // check if bags exceed 10
   useEffect(() => {
-    if (bags[0] >= 10) {
-      setPoints([points[0] - 100, points[1]]);
-      setBags([bags[0] - 10, bags[1]]);
+    if (gameData.bags[0] >= 10) {
+      gameData.setPoints([gameData.points[0] - 100, gameData.points[1]]);
+      gameData.setBags([gameData.bags[0] - 10, gameData.bags[1]]);
+
+      gameData.setPoints([gameData.points[0] - 100, gameData.points[1]]);
+      gameData.setBags([gameData.bags[0] - 10, gameData.bags[1]]);
     }
-    if (bags[1] >= 10) {
-      setPoints([points[0], points[1] - 100]);
-      setBags([bags[0], bags[1] - 10]);
+    if (gameData.bags[1] >= 10) {
+      gameData.setPoints([gameData.points[0], gameData.points[1] - 100]);
+      gameData.setBags([gameData.bags[0], gameData.bags[1] - 10]);
+      gameData.setPoints([gameData.points[0], gameData.points[1] - 100]);
+      gameData.setBags([gameData.bags[0], gameData.bags[1] - 10]);
     }
-  }, [bags]);
+  }, [gameData.bags]);
 
   // get team from index
   const team = (i) => {
@@ -138,8 +141,8 @@ const Scoring: React.FC = (props) => {
     }
 
     let nextPoints: number[] = [
-      points[0] + newPoints[0] + newBags[0],
-      points[1] + newPoints[1] + newBags[1],
+      gameData.points[0] + newPoints[0] + newBags[0],
+      gameData.points[1] + newPoints[1] + newBags[1],
     ];
 
     let line: (string | number)[] = [];
@@ -149,11 +152,13 @@ const Scoring: React.FC = (props) => {
     }
     line.push(newPoints[0] + newBags[0]);
     line.push(newPoints[1] + newBags[1]);
-    score.addScoreLine(line);
+    gameData.addScoreLine(line);
 
-    setPoints(nextPoints);
-
-    setBags([bags[0] + newBags[0], bags[1] + newBags[1]]);
+    gameData.setPoints(nextPoints);
+    gameData.setBags([
+      gameData.bags[0] + newBags[0],
+      gameData.bags[1] + newBags[1],
+    ]);
 
     setBids(['-', '-', '-', '-']);
     setTricks(['-', '-', '-', '-']);
@@ -194,8 +199,8 @@ const Scoring: React.FC = (props) => {
             tricksValue={tricks[idx]}
             onChangeBid={(text) => handleBidChange(text, idx)}
             onChangeTricks={(text) => handleTricksChange(text, idx)}
-            points={points[team(idx)]}
-            bags={bags[team(idx)]}
+            points={gameData.points[team(idx)]}
+            bags={gameData.bags[team(idx)]}
             height={tileDimensions.height}
             width={tileDimensions.width}
             margin={tileDimensions.margin}

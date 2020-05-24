@@ -30,7 +30,7 @@ export const CustomDropdown = (props) => {
         },
         props.containerStyle,
       ]}
-      pickerStyle={{ backgroundColor: colors.dropdownPickerBackgroundColor }}
+      pickerStyle={{ backgroundColor: 'white' }}
       shadeOpacity={0.0}
       value={props.value}
       onChangeText={(text) => props.onChangeText(text)}

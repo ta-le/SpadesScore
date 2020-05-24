@@ -1,13 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
 import colors from '../constants/Colors';
-import Score from '../state/Score';
-import PlayerNames from '../state/PlayerNames';
+import GameData from '../state/GameData';
 
 const ScoreBoard: React.FC = (props) => {
-  let scoreC = Score.useContainer();
-  let playerNamesC = PlayerNames.useContainer();
+  let gameData = GameData.useContainer();
 
   const bg: string[] = ['red', 'green', 'blue', 'yellow', 'purple', 'brown'];
 
@@ -57,7 +54,7 @@ const ScoreBoard: React.FC = (props) => {
             style={[styles.cell, { backgroundColor: bg[y] }]}
           >
             <Text style={styles.cellText}>
-              {playerNamesC.names[y].substr(0, 5)}
+              {gameData.names[y].substr(0, 5)}
             </Text>
           </View>
         ))}
@@ -79,7 +76,8 @@ const ScoreBoard: React.FC = (props) => {
     <View style={styles.container}>
       {renderHeader()}
       <FlatList
-        data={scoreC.score}
+        data={gameData.score}
+        keyExtractor={(item, idx) => `r${idx}`}
         renderItem={({ item, index }) => renderRow(item, index)}
         ListEmptyComponent={
           <View
@@ -96,7 +94,7 @@ const ScoreBoard: React.FC = (props) => {
           </View>
         }
       />
-      {/*scoreC.score.map((row, x) => renderRow(row, x))*/}
+      {/*gameData.score.map((row, x) => renderRow(row, x))*/}
     </View>
   );
 };
