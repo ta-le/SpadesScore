@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import { Input } from 'react-native-elements';
 import { CustomDropdown } from './CustomDropdown';
-import GameData from '../state/GameData';
+import GameData from '../stateContainers/GameData';
 import colors from '../constants/Colors';
 
 interface PlayerCardProps {

@@ -7,7 +7,7 @@ import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { ScreenNameList } from '../constants/ParamList';
 import { PlayerCard } from '../components/PlayerCard';
 import colors from '../constants/Colors';
-import GameData from '../state/GameData';
+import GameData from '../stateContainers/GameData';
 
 const window = Dimensions.get('window');
 
@@ -246,12 +246,24 @@ const Scoring: React.FC = (props) => {
 };
 
 // calculate dimensions helper
-const calcTileDimensions = (windowHeight, windowWidth, tpr) => {
+const calcTileDimensions: (
+  height: number,
+  windowWidth: number,
+  tpr: number
+) => { height: number; width: number; margin: number } = (
+  windowHeight,
+  windowWidth,
+  tpr
+) => {
   const margin: number = (windowHeight / tpr) * 0.015;
   const height: number =
     windowHeight / 2 - styles.sbButton.height - getStatusBarHeight() - 3;
   const width: number = (windowWidth - margin * (tpr * 2)) / tpr;
-  return { height, width, margin };
+  return {
+    height: Math.floor(height),
+    width: Math.floor(width),
+    margin: Math.floor(margin),
+  };
 };
 
 export default Scoring;

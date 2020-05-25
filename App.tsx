@@ -4,7 +4,7 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { Routes } from './src/screens/Routes';
 import { YellowBox, AsyncStorage } from 'react-native';
-import GameData from './src/state/GameData';
+import GameData from './src/stateContainers/GameData';
 import { SaveStateType } from './src/constants/SaveStateType';
 
 YellowBox.ignoreWarnings(['componentWillReceiveProps', 'componentWillUpdate']);
@@ -12,8 +12,14 @@ console.ignoredYellowBox = ['Warning:'];
 
 const App: React.FC = () => {
   const [isReady, setReady] = useState(false);
+  const [gameState, setGameState] = useState<SaveStateType>({
+    roundData: [],
+    players: [1, 2, 3, 4].map((x) => `Player ${x}`),
+    points: [0, 0],
+    bags: [0, 0],
+  });
 
-  useEffect(() => {
+  const loadResources = async () => {
     async function loadFonts() {
       await Font.loadAsync({
         Roboto: require('native-base/Fonts/Roboto.ttf'),
@@ -21,15 +27,31 @@ const App: React.FC = () => {
         ...Ionicons.font,
       });
     }
+    async function loadGameState() {
+      await AsyncStorage.getItem('lastGameState', (error, result) => {
+        console.log('first fetch: ' + result);
 
-    loadFonts();
-    setReady(true);
-  }, []);
+        if (result !== null) {
+          setGameState(JSON.parse(result));
+        }
+      });
+    }
 
-  if (!isReady) return <AppLoading />;
+    await loadFonts();
+    await loadGameState();
+    //return Promise.all([loadFonts(), loadGameState()]);
+  };
+
+  if (!isReady)
+    return (
+      <AppLoading
+        startAsync={() => loadResources()}
+        onFinish={() => setReady(true)}
+      />
+    );
   else
     return (
-      <GameData.Provider>
+      <GameData.Provider initialState={gameState}>
         <Routes />
       </GameData.Provider>
     );

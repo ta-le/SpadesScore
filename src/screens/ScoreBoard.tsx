@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import colors from '../constants/Colors';
-import GameData from '../state/GameData';
+import GameData from '../stateContainers/GameData';
 
 const ScoreBoard: React.FC = (props) => {
   let gameData = GameData.useContainer();
@@ -15,6 +15,9 @@ const ScoreBoard: React.FC = (props) => {
     colors.t2Color,
   ];
 
+  // configure order of Player collumns here
+  const order: number[] = [0, 3, 1, 2];
+
   const renderRow = (row, idx) => {
     return (
       <View key={`${idx}`} style={styles.rowContainer}>
@@ -23,7 +26,7 @@ const ScoreBoard: React.FC = (props) => {
         >
           <Text style={styles.cellText}>{idx + 1}</Text>
         </View>
-        {[0, 1, 2, 3].map((y) => (
+        {order.map((y) => (
           <View
             key={`score${y}`}
             style={[styles.cell, { backgroundColor: bg[y] }]}
@@ -55,7 +58,7 @@ const ScoreBoard: React.FC = (props) => {
         >
           <Text style={styles.cellText}>#</Text>
         </View>
-        {[0, 1, 2, 3].map((y) => (
+        {order.map((y) => (
           <View
             key={`score${y}`}
             style={[styles.cell, { backgroundColor: bg[y] }]}

@@ -7,7 +7,6 @@ interface InputModalProps {
   visible: boolean;
   onCancelPress: () => void;
   onOKPress: (input: string) => void;
-  onClearAllPress: () => void;
   placeHolder: string;
 }
 
@@ -30,13 +29,6 @@ const InputModal: React.FC<InputModalProps> = (props) => {
             inputStyle={styles.textInput}
           />
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-            <Button
-              title='Clear all'
-              type='clear'
-              onPress={() => props.onClearAllPress()}
-              titleStyle={styles.buttonText}
-              containerStyle={styles.button}
-            />
             <Button
               title='Cancel'
               type='clear'

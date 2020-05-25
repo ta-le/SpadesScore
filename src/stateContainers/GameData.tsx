@@ -1,29 +1,8 @@
 import { useState, useEffect } from 'react';
 import { createContainer } from 'unstated-next';
 import { SaveStateType } from '../constants/SaveStateType';
-import { AsyncStorage } from 'react-native';
 
-//TODO: load last game state
-const loadLastGameState = () => {
-  let gameState: SaveStateType = {
-    roundData: [],
-    players: [1, 2, 3, 4].map((x) => `Player ${x}`),
-    points: [0, 0],
-    bags: [0, 0],
-  };
-  /*
-  AsyncStorage.getItem('lastGameState', (error, result) => {
-    console.log('first fetch: ' + result);
-    let parsed: SaveStateType = JSON.parse(result);
-    if (result) gameState = parsed;
-  });
-  */
-  return gameState;
-};
-
-function useGameState() {
-  const lastGameState = loadLastGameState();
-
+function useGameState(lastGameState: SaveStateType) {
   // ScoreBoard Data
   //TODO: refractor score to roundData
   let [score, setScore] = useState<(number | string)[][]>(

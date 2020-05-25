@@ -13,7 +13,7 @@ import { ScreenNameList } from '../constants/ParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
 import CustomListItem from '../components/CustomListItem';
 import InputModalContainer from '../components/InputModalContainer';
-import GameData from '../state/GameData';
+import GameData from '../stateContainers/GameData';
 
 let pkg = require('../../app.json');
 

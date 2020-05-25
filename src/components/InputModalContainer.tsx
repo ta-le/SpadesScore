@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, AsyncStorage, ToastAndroid } from 'react-native';
 import colors from '../constants/Colors';
-import GameData from '../state/GameData';
+import GameData from '../stateContainers/GameData';
 import InputModal from './InputModal';
 import { SaveStateType } from '../constants/SaveStateType';
 
@@ -55,7 +55,6 @@ const InputModalContainer: React.FC<InputModalContainerProps> = (props) => {
     <InputModal
       visible={props.visible}
       placeHolder={getDate()}
-      onClearAllPress={() => removeAll()}
       onCancelPress={() => props.onCancelPress()}
       onOKPress={(input) => addSaveState(input)}
     />

@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { AsyncStorage, Text, View, StyleSheet, Alert } from 'react-native';
+import {
+  AsyncStorage,
+  Text,
+  View,
+  StyleSheet,
+  Alert,
+  ToastAndroid,
+} from 'react-native';
 import { Icon } from 'react-native-elements';
 import CustomListItem from '../components/CustomListItem';
 import colors from '../constants/Colors';
 import { SaveStateType } from '../constants/SaveStateType';
-import GameData from '../state/GameData';
+import GameData from '../stateContainers/GameData';
 
 const SaveStates: React.FC = () => {
   const [saveStates, setSaveStates] = useState([]);
@@ -47,6 +54,10 @@ const SaveStates: React.FC = () => {
         text: 'Load',
         onPress: () => {
           gameData.loadSaveState(saveStates[idx]);
+          ToastAndroid.show(
+            'Game was successfully loaded.',
+            ToastAndroid.SHORT
+          );
         },
       },
     ]);
