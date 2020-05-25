@@ -10,6 +10,7 @@ interface InputModalProps {
   placeHolder: string;
 }
 
+//TODO: migrate to react-native-modal for animations etc.
 const InputModal: React.FC<InputModalProps> = (props) => {
   const [input, setInput] = useState<string>(props.placeHolder);
 

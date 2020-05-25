@@ -2,6 +2,7 @@ import React from 'react';
 import { Dropdown } from 'react-native-material-dropdown';
 import colors from '../constants/Colors';
 
+//TODO: migrate to react-native-picker (dropdown uses deprecated methods)
 export const CustomDropdown = (props) => {
   return (
     <Dropdown
