@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Dimensions, StyleSheet } from 'react-native';
+import { View, Dimensions, StyleSheet, AsyncStorage } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -83,6 +83,20 @@ const Scoring: React.FC = (props) => {
     }
   }, [gameData.bags]);
 
+  useEffect(() => {
+    // update AsyncStorage lastGameState
+    async function updateLastGameState() {
+      let currentData = gameData.getGameStateObject('last');
+
+      await AsyncStorage.setItem(
+        'lastGameState',
+        JSON.stringify(currentData),
+        () => console.log('lastGameState set: ' + JSON.stringify(currentData))
+      );
+    }
+    updateLastGameState();
+  }, [gameData.points]);
+
   // get team from index
   const team = (i) => {
     if (i === 0 || i === 3) return 0;
@@ -91,12 +105,13 @@ const Scoring: React.FC = (props) => {
   };
 
   // is called when hitting the finish round button. Calculates new points
-  const finishRound = () => {
+  const finishRound = async () => {
     if (bids.includes('-') || tricks.includes('-')) {
       alert('Fill in all Bids and Tricks before finishing the round.');
       return;
     }
 
+    // points and bags from this round
     let newPoints = [0, 0];
     let newBags = [0, 0];
 
@@ -145,6 +160,8 @@ const Scoring: React.FC = (props) => {
       gameData.points[1] + newPoints[1] + newBags[1],
     ];
 
+    // add new ScoreBoard line
+
     let line: (string | number)[] = [];
     for (let i = 0; i < 4; i++) {
       line.push(bids[i]);
@@ -154,11 +171,15 @@ const Scoring: React.FC = (props) => {
     line.push(newPoints[1] + newBags[1]);
     gameData.addScoreLine(line);
 
+    // update points and bags
+
     gameData.setPoints(nextPoints);
     gameData.setBags([
       gameData.bags[0] + newBags[0],
       gameData.bags[1] + newBags[1],
     ]);
+
+    // reset bid and tricks dropdowns
 
     setBids(['-', '-', '-', '-']);
     setTricks(['-', '-', '-', '-']);

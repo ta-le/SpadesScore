@@ -1,17 +1,31 @@
 import React from 'react';
-import { ListItem } from 'react-native-elements';
+import { ListItem, ListItemProps, IconProps } from 'react-native-elements';
 import colors from '../constants/Colors';
 
-const CustomListItem = (props) => {
+interface CustomListItemProps extends ListItemProps {
+  icon?: IconProps;
+  leftPadding?: boolean;
+}
+
+const CustomListItem: React.FC<CustomListItemProps> = (props) => {
   return (
     <ListItem
-      titleStyle={{ color: colors.textColor, fontSize: 17, paddingLeft: 15 }}
+      titleStyle={{
+        color: colors.textColor,
+        fontSize: 17,
+        paddingLeft: props.leftPadding ? 15 : 0,
+      }}
       subtitleStyle={{
         color: colors.subTextColor,
         fontSize: 14,
-        paddingLeft: 15,
+        paddingLeft: props.leftPadding ? 15 : 0,
       }}
-      containerStyle={{ backgroundColor: colors.backDropColor }}
+      containerStyle={[
+        {
+          backgroundColor: colors.backDropColor,
+        },
+        props.containerStyle,
+      ]}
       leftIcon={{
         color: '#ddd',
         size: 27,

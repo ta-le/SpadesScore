@@ -18,7 +18,14 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "bundleIdentifier": "com.leku.spades",
       "supportsTablet": true
+    },
+    "scheme": "spades",
+    "android": {
+      "package": "com.leku.spades",
+      "versionCode": 5,
+      "permissions": []
     }
   }
 }

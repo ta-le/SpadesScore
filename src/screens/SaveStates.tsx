@@ -3,14 +3,29 @@ import { AsyncStorage, Text, View, StyleSheet, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import CustomListItem from '../components/CustomListItem';
 import colors from '../constants/Colors';
+import { SaveStateType } from '../constants/SaveStateType';
+import GameData from '../state/GameData';
 
 const SaveStates: React.FC = () => {
   const [saveStates, setSaveStates] = useState([]);
 
+  const gameData = GameData.useContainer();
+
   const fetch = async () => {
     try {
       const fetched = await AsyncStorage.getItem('saveStates');
-      console.log('fetched game states: ' + fetched);
+      const parsed: [] = JSON.parse(fetched);
+
+      //DEBUG
+      console.log(
+        `Fetched ${parsed.length} game states: ${parsed.reduce(
+          (acc, curr: any) => {
+            return acc + curr.name + ', ';
+          },
+          ''
+        )}`
+      );
+
       if (fetched) {
         setSaveStates(JSON.parse(fetched));
       }
@@ -23,15 +38,16 @@ const SaveStates: React.FC = () => {
     fetch();
   }, []);
 
-  //TODO: Loading a save state
-  const loadSaveState = (key: string) => {
+  const loadSaveState = (idx: number) => {
     Alert.alert('Warning', 'Load this save state? Current game will be lost.', [
       {
         text: 'Cancel',
       },
       {
         text: 'Load',
-        onPress: () => {},
+        onPress: () => {
+          gameData.loadSaveState(saveStates[idx]);
+        },
       },
     ]);
   };
@@ -58,11 +74,20 @@ const SaveStates: React.FC = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.sectionHeaderText}> Saved Game States </Text>
-      {saveStates.map((item, idx) => (
+      {saveStates.map((item: SaveStateType, idx) => (
         <CustomListItem
           key={`state${idx}`}
           title={item.name}
-          rightIcon={() => (
+          subtitle={
+            item.players.reduce(
+              (acc, curr, idx) => acc + curr + (idx !== 3 ? ', ' : ''),
+              'Players: '
+            ) +
+            '\n' +
+            `Rounds played: ${item.roundData.length}`
+          }
+          leftPadding={false}
+          rightIcon={
             <View style={{ flexDirection: 'row' }}>
               <Icon
                 name='content-save-edit'
@@ -70,7 +95,7 @@ const SaveStates: React.FC = () => {
                 color='white'
                 size={25}
                 containerStyle={{ marginRight: 16 }}
-                onPress={() => loadSaveState('')}
+                onPress={() => loadSaveState(idx)}
               />
               <Icon
                 name='delete'
@@ -81,7 +106,7 @@ const SaveStates: React.FC = () => {
                 onPress={() => deleteSaveState(idx)}
               />
             </View>
-          )}
+          }
         />
       ))}
     </View>
@@ -94,12 +119,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 20,
-    paddingLeft: 26,
     backgroundColor: colors.backDropColor,
   },
   sectionHeaderText: {
     color: colors.sectionTextColor,
     fontWeight: 'bold',
     fontSize: 15,
+    paddingLeft: 26,
   },
 });

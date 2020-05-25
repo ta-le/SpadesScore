@@ -1,78 +1,39 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Modal,
-  TextInput,
-  Text,
-  StyleSheet,
-  AsyncStorage,
-} from 'react-native';
+import { View, Modal, TextInput, Text, StyleSheet } from 'react-native';
 import colors from '../constants/Colors';
-import { Button } from 'react-native-elements';
-import GameData from '../state/GameData';
+import { Button, Input } from 'react-native-elements';
 
 interface InputModalProps {
   visible: boolean;
   onCancelPress: () => void;
-  onOKPress: () => void;
+  onOKPress: (input: string) => void;
+  onClearAllPress: () => void;
+  placeHolder: string;
 }
 
 const InputModal: React.FC<InputModalProps> = (props) => {
-  const [input, setInput] = useState(getDate());
-  const gameData = GameData.useContainer();
-
-  const addSaveState = async (name: string) => {
-    let currentData = gameData.getGameStateObject(name);
-    console.log('gameData:' + JSON.stringify(currentData));
-    try {
-      AsyncStorage.getItem('saveStates', (error, result) => {
-        console.log('getItem result: ' + result);
-        if (result) {
-          let existingData = JSON.parse(result);
-          let newData = existingData.concat([currentData]);
-
-          AsyncStorage.setItem('saveStates', JSON.stringify(newData), () => {
-            console.log('AsyncStorage: successfully merged saveState entry');
-          });
-        } else {
-          AsyncStorage.setItem(
-            'saveStates',
-            JSON.stringify([currentData]),
-            () => {
-              console.log('AsyncStorage: successfully set new saveState entry');
-            }
-          );
-        }
-      });
-    } catch (error) {
-      console.log('Error while setting item in AsyncStorage.');
-    }
-    props.onOKPress();
-  };
-
-  const removeAll = () => {
-    AsyncStorage.removeItem('saveStates', () => console.log('removed'));
-  };
+  const [input, setInput] = useState<string>(props.placeHolder);
 
   return (
     <Modal visible={props.visible} transparent>
       <View style={styles.container}>
         <View style={styles.window}>
-          <Text style={styles.headLine}>Enter a name for the save state.</Text>
-          <TextInput
+          <Input
+            label='Enter a name for the save state.'
+            labelStyle={styles.headLine}
             selectTextOnFocus={true}
-            underlineColorAndroid={'white'}
             maxLength={15}
             returnKeyType={'send'}
             value={input}
             onChangeText={(text) => setInput(text)}
-            style={styles.textInput}
+            inputContainerStyle={styles.inputContainer}
+            inputStyle={styles.textInput}
           />
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
             <Button
               title='Clear all'
               type='clear'
-              onPress={() => removeAll()}
+              onPress={() => props.onClearAllPress()}
               titleStyle={styles.buttonText}
               containerStyle={styles.button}
             />
@@ -86,7 +47,7 @@ const InputModal: React.FC<InputModalProps> = (props) => {
             <Button
               title='OK'
               type='clear'
-              onPress={() => addSaveState(input)}
+              onPress={() => props.onOKPress(input)}
               titleStyle={styles.buttonText}
               containerStyle={styles.button}
             />
@@ -98,11 +59,6 @@ const InputModal: React.FC<InputModalProps> = (props) => {
 };
 
 export default InputModal;
-
-const getDate = () => {
-  let date = new Date();
-  return `${date.getFullYear()}/${date.getUTCMonth() + 1}/${date.getUTCDate()}`;
-};
 
 const width = 290;
 const height = 160;
@@ -118,9 +74,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: height,
     width: width,
-    paddingTop: 18,
+    paddingTop: 20,
     paddingBottom: 10,
-    paddingHorizontal: 19,
+    paddingHorizontal: 16,
     backgroundColor: colors.backDropColor,
     shadowColor: '#000',
     shadowOffset: {
@@ -134,17 +90,18 @@ const styles = StyleSheet.create({
   },
   headLine: {
     fontSize: 15,
-    color: 'white',
+    color: colors.textColor,
+  },
+  inputContainer: {
+    //backgroundColor: 'red',
+    paddingTop: 10,
   },
   textInput: {
     alignSelf: 'center',
     width: width * 0.8,
-    flex: 0.6,
-    //backgroundColor: 'yellow',
-    fontSize: 15,
-    color: 'white',
+    fontSize: 16,
+    color: colors.textColor,
     paddingLeft: 5,
-    paddingBottom: 7,
   },
   button: {
     paddingLeft: 8,

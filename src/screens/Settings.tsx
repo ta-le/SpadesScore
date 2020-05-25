@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Alert,
+  ToastAndroid,
+  AsyncStorage,
+} from 'react-native';
+import { Linking } from 'expo';
 import colors from '../constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import { ScreenNameList } from '../constants/ParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
 import CustomListItem from '../components/CustomListItem';
-import InputModal from '../components/InputModal';
+import InputModalContainer from '../components/InputModalContainer';
+import GameData from '../state/GameData';
+
+let pkg = require('../../app.json');
 
 interface SettingsProps {}
 
-// TODO: New Game, Rate App
 const Settings: React.FC<SettingsProps> = () => {
   const navigation: StackNavigationProp<
     ScreenNameList,
@@ -17,48 +26,90 @@ const Settings: React.FC<SettingsProps> = () => {
   > = useNavigation();
 
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const gameData = GameData.useContainer();
+
+  const onPressNewGame = () => {
+    Alert.alert('Warning', 'Unsaved game will be lost.', [
+      {
+        text: 'Cancel',
+      },
+      {
+        text: 'OK',
+        onPress: () => {
+          gameData.resetGame();
+          AsyncStorage.removeItem('lastGameState');
+        },
+      },
+    ]);
+  };
+
+  const settingsList = [
+    {
+      title: 'New Game',
+      subtitle: 'Create a new game',
+      icon: {
+        name: 'autorenew',
+        type: 'material-community',
+      },
+      onPress: () => onPressNewGame(),
+    },
+    {
+      title: 'Save Game',
+      subtitle: 'Create a new save state',
+      icon: {
+        name: 'content-save',
+        type: 'material-community',
+      },
+      onPress: () => setModalVisible(true),
+    },
+    {
+      title: 'Save States',
+      subtitle: 'Manage and load save states',
+      icon: {
+        name: 'storage',
+        type: 'material',
+      },
+      onPress: () => navigation.navigate('SaveStates'),
+    },
+    {
+      title: 'Rate App',
+      subtitle: 'Give or change rating',
+      icon: {
+        name: 'star',
+        type: 'material-community',
+      },
+      onPress: () => Linking.openURL('market://details?id=com.leku.spades'),
+    },
+    {
+      title: 'Version',
+      icon: {
+        name: 'versions',
+        type: 'octicon',
+        containerStyle: { paddingLeft: 5 },
+      },
+      rightTitle: pkg.expo.version,
+    },
+  ];
 
   return (
     <View style={styles.container}>
-      <InputModal
+      <InputModalContainer
         visible={modalVisible}
         onCancelPress={() => setModalVisible(!modalVisible)}
         onOKPress={() => setModalVisible(!modalVisible)}
       />
-      <CustomListItem
-        title='New Game'
-        subtitle='Create a new game'
-        icon={{
-          name: 'autorenew',
-          type: 'material-community',
-        }}
-      />
-      <CustomListItem
-        title='Save Game'
-        subtitle='Create a new save state'
-        icon={{
-          name: 'content-save',
-          type: 'material-community',
-        }}
-        onPress={() => setModalVisible(true)}
-      />
-      <CustomListItem
-        title='Save States'
-        subtitle='Manage and load save states'
-        icon={{
-          name: 'storage',
-          type: 'material',
-        }}
-        onPress={() => navigation.navigate('SaveStates')}
-      />
-      <CustomListItem
-        title='Rate App'
-        subtitle='Give or change rating'
-        icon={{
-          name: 'star',
-          type: 'material-community',
-        }}
-      />
+      {settingsList.map((item) => (
+        <CustomListItem
+          key={item.title}
+          title={item.title}
+          subtitle={item.subtitle}
+          icon={item.icon}
+          onPress={item.onPress}
+          leftPadding
+          rightTitle={item.rightTitle}
+          rightTitleStyle={{ color: '#ddd' }}
+        />
+      ))}
     </View>
   );
 };

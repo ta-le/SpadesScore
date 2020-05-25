@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { Input } from 'react-native-elements';
 import { CustomDropdown } from './CustomDropdown';
 import GameData from '../state/GameData';
+import colors from '../constants/Colors';
 
 interface PlayerCardProps {
   playerNumber: number;
@@ -35,11 +37,14 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
           autoCompleteType={'off'}
           autoCorrect={false}
           allowFontScaling={false}
-          maxLength={20}
+          maxLength={10}
           onChangeText={(text) => gameData.setName(text, props.playerNumber)}
           selectTextOnFocus
           value={gameData.names[props.playerNumber - 1]}
-          style={styles.headingInput}
+          style={[
+            styles.headingInput,
+            { width: props.width - styles.container.paddingHorizontal * 2 },
+          ]}
         />
       </View>
       <View style={{ flexDirection: 'row' }}>
@@ -71,7 +76,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
           <Text style={styles.pointsTextStyle}>{props.points}</Text>
         </View>
         <View style={styles.rowContainer}>
-          <Text style={styles.pointsTextStyle}>{'  Bags:'}</Text>
+          <Text style={styles.pointsTextStyle}>{'Bags:'}</Text>
           <Text style={styles.pointsTextStyle}>{props.bags}</Text>
         </View>
       </View>
@@ -81,9 +86,10 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#525252',
+    backgroundColor: colors.cardColor,
     alignSelf: 'flex-start',
     paddingHorizontal: 9,
+    borderRadius: 10,
   },
   headerContainer: {
     borderBottomWidth: 1,
@@ -99,7 +105,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 20,
     color: '#ddd',
-    width: 100,
     marginTop: 5,
   },
   rowsContainer: {
@@ -111,13 +116,25 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#777',
+    paddingHorizontal: 5,
+    paddingVertical: 1.4,
+    backgroundColor: colors.pointsHighlight,
     alignItems: 'center',
     marginBottom: 15,
-    width: 130,
+    width: 125,
+    borderRadius: 7,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   pointsTextStyle: {
     color: '#ddd',
     fontSize: 20,
+    textAlign: 'right',
   },
 });

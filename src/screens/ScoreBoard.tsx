@@ -6,7 +6,14 @@ import GameData from '../state/GameData';
 const ScoreBoard: React.FC = (props) => {
   let gameData = GameData.useContainer();
 
-  const bg: string[] = ['red', 'green', 'blue', 'yellow', 'purple', 'brown'];
+  const bg: string[] = [
+    colors.t1Color,
+    colors.t2Color,
+    colors.t2Color,
+    colors.t1Color,
+    colors.t1Color,
+    colors.t2Color,
+  ];
 
   const renderRow = (row, idx) => {
     return (
@@ -54,7 +61,7 @@ const ScoreBoard: React.FC = (props) => {
             style={[styles.cell, { backgroundColor: bg[y] }]}
           >
             <Text style={styles.cellText}>
-              {gameData.names[y].substr(0, 5)}
+              {gameData.names[y].substr(0, 8)}
             </Text>
           </View>
         ))}
@@ -116,6 +123,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 50,
+    borderLeftWidth: 1,
   },
   cellText: {
     color: '#ddd',

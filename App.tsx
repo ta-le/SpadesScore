@@ -3,10 +3,12 @@ import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { Routes } from './src/screens/Routes';
-import { YellowBox } from 'react-native';
+import { YellowBox, AsyncStorage } from 'react-native';
 import GameData from './src/state/GameData';
+import { SaveStateType } from './src/constants/SaveStateType';
 
 YellowBox.ignoreWarnings(['componentWillReceiveProps', 'componentWillUpdate']);
+console.ignoredYellowBox = ['Warning:'];
 
 const App: React.FC = () => {
   const [isReady, setReady] = useState(false);

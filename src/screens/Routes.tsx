@@ -12,7 +12,7 @@ interface RoutesProps {}
 
 const Stack = createStackNavigator<ScreenNameList>();
 
-export const Routes: React.FC<RoutesProps> = ({}) => {
+export const Routes: React.FC<RoutesProps> = (props) => {
   return (
     <NavigationContainer>
       <Stack.Navigator
