@@ -3,7 +3,7 @@ import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { Routes } from './src/screens/Routes';
-import { YellowBox, AsyncStorage } from 'react-native';
+import { YellowBox, AsyncStorage, StatusBar } from 'react-native';
 import GameData from './src/stateContainers/GameData';
 import { SaveStateType } from './src/constants/SaveStateType';
 
@@ -20,13 +20,6 @@ const App: React.FC = () => {
   });
 
   const loadResources = async () => {
-    async function loadFonts() {
-      await Font.loadAsync({
-        Roboto: require('native-base/Fonts/Roboto.ttf'),
-        Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
-        ...Ionicons.font,
-      });
-    }
     async function loadGameState() {
       await AsyncStorage.getItem('lastGameState', (error, result) => {
         console.log('first fetch: ' + result);
@@ -37,7 +30,6 @@ const App: React.FC = () => {
       });
     }
 
-    await loadFonts();
     await loadGameState();
     //return Promise.all([loadFonts(), loadGameState()]);
   };
@@ -52,6 +44,11 @@ const App: React.FC = () => {
   else
     return (
       <GameData.Provider initialState={gameState}>
+        <StatusBar
+          translucent
+          backgroundColor='transparent'
+          barStyle='light-content'
+        />
         <Routes />
       </GameData.Provider>
     );

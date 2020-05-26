@@ -4,6 +4,7 @@ import { Input } from 'react-native-elements';
 import { CustomDropdown } from './CustomDropdown';
 import GameData from '../stateContainers/GameData';
 import colors from '../constants/Colors';
+import { Color } from 'react-color';
 
 interface PlayerCardProps {
   playerNumber: number;
@@ -16,6 +17,9 @@ interface PlayerCardProps {
   height: number;
   width: number;
   margin: number;
+  backgroundColor?: string;
+  textColor?: string;
+  pointsHighlight?: string;
 }
 
 export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
@@ -29,6 +33,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
           height: props.height,
           width: props.width,
           margin: props.margin,
+          backgroundColor: props.backgroundColor,
         },
       ]}
     >
@@ -43,7 +48,10 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
           value={gameData.names[props.playerNumber - 1]}
           style={[
             styles.headingInput,
-            { width: props.width - styles.container.paddingHorizontal * 2 },
+            {
+              width: props.width - styles.container.paddingHorizontal * 2,
+              color: props.textColor,
+            },
           ]}
         />
       </View>
@@ -58,6 +66,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
           value={props.bidValue}
           onChangeText={(text) => props.onChangeBid(text)}
           containerStyle={{ marginRight: 5 }}
+          textColor={props.textColor}
         />
         <CustomDropdown
           label='Tricks'
@@ -67,17 +76,36 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
           value={props.tricksValue}
           onChangeText={(text) => props.onChangeTricks(text)}
           containerStyle={{ marginLeft: 5 }}
+          textColor={props.textColor}
         />
       </View>
 
       <View style={styles.rowsContainer}>
-        <View style={styles.rowContainer}>
-          <Text style={styles.pointsTextStyle}>Points:</Text>
-          <Text style={styles.pointsTextStyle}>{props.points}</Text>
+        <View
+          style={[
+            styles.rowContainer,
+            { backgroundColor: props.pointsHighlight },
+          ]}
+        >
+          <Text style={[styles.pointsTextStyle, { color: props.textColor }]}>
+            Points:
+          </Text>
+          <Text style={[styles.pointsTextStyle, { color: props.textColor }]}>
+            {props.points}
+          </Text>
         </View>
-        <View style={styles.rowContainer}>
-          <Text style={styles.pointsTextStyle}>{'Bags:'}</Text>
-          <Text style={styles.pointsTextStyle}>{props.bags}</Text>
+        <View
+          style={[
+            styles.rowContainer,
+            { backgroundColor: props.pointsHighlight },
+          ]}
+        >
+          <Text style={[styles.pointsTextStyle, { color: props.textColor }]}>
+            {'Bags:'}
+          </Text>
+          <Text style={[styles.pointsTextStyle, { color: props.textColor }]}>
+            {props.bags}
+          </Text>
         </View>
       </View>
     </View>
@@ -86,7 +114,6 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.cardColor,
     alignSelf: 'flex-start',
     paddingHorizontal: 9,
     borderRadius: 10,
@@ -118,7 +145,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 5,
     paddingVertical: 1.4,
-    backgroundColor: colors.pointsHighlight,
+    backgroundColor: colors.t1PointsHighlight,
     alignItems: 'center',
     marginBottom: 15,
     width: 125,

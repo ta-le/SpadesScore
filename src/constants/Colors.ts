@@ -2,8 +2,12 @@ const colors = {
   backDropColor: '#414141',
 
   // PlayerCard
-  cardColor: '#505050',
-  pointsHighlight: '#626262',
+  t1CardColor: '#585858',
+  t2CardColor: '#ffe3d3',
+  t1CardTextColor: '#ddd',
+  t2CardTextColor: '#222',
+  t1PointsHighlight: '#606060',
+  t2PointsHighlight: '#ffe9d9',
   cardHeaderBackgroundColor: '#ca3e47',
   cardHeaderFontColor: '#d8d8d8',
   headerColor: '#ca3e47',
@@ -20,8 +24,8 @@ const colors = {
   sectionTextColor: '#ca3e47',
 
   // ScoreBoard
-  t1Color: '#ca3e47',
-  t2Color: '#505050',
+  t1Color: '#585858',
+  t2Color: '#f1f1f1',
 };
 
 export default colors;

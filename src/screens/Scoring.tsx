@@ -225,6 +225,17 @@ const Scoring: React.FC = (props) => {
             height={tileDimensions.height}
             width={tileDimensions.width}
             margin={tileDimensions.margin}
+            backgroundColor={
+              team(idx) === 0 ? colors.t1CardColor : colors.t2CardColor
+            }
+            textColor={
+              team(idx) === 0 ? colors.t1CardTextColor : colors.t2CardTextColor
+            }
+            pointsHighlight={
+              team(idx) === 0
+                ? colors.t1PointsHighlight
+                : colors.t2PointsHighlight
+            }
           />
         ))}
       </View>

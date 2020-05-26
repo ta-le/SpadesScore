@@ -1,17 +1,27 @@
 import React from 'react';
 import { Dropdown } from 'react-native-material-dropdown';
 import colors from '../constants/Colors';
+import { Color } from 'react-color';
+
+interface CustomDropdownProps {
+  textColor: Color;
+  label: string;
+  data: { value: string }[];
+  containerStyle?: object;
+  value: string | number;
+  onChangeText: (text: any) => any;
+}
 
 //TODO: migrate to react-native-picker (dropdown uses deprecated methods)
-export const CustomDropdown = (props) => {
+export const CustomDropdown: React.FC<CustomDropdownProps> = (props) => {
   return (
     <Dropdown
       label={props.label}
       data={props.data}
       animationDuration={0}
       fontSize={19}
-      baseColor={colors.dropdownBaseColor}
-      textColor={colors.dropdownBaseColor}
+      baseColor={props.textColor}
+      textColor={props.textColor}
       // inactive dropdown items
       itemColor={'#aaa'}
       // active dropdown item
@@ -25,7 +35,6 @@ export const CustomDropdown = (props) => {
       containerStyle={[
         {
           flex: 1,
-          //marginHorizontal: 8,
           marginTop: 10,
           //backgroundColor: 'yellow',
         },
