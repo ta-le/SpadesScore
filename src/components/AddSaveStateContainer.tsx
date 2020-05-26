@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, AsyncStorage, ToastAndroid } from 'react-native';
-import colors from '../constants/Colors';
+import React from 'react';
+import { AsyncStorage, ToastAndroid } from 'react-native';
 import GameData from '../stateContainers/GameData';
 import InputModal from './InputModal';
 import { SaveStateType } from '../constants/SaveStateType';
@@ -11,16 +10,13 @@ interface InputModalContainerProps {
   onOKPress: () => void;
 }
 
-const InputModalContainer: React.FC<InputModalContainerProps> = (props) => {
+const AddSaveStateContainer: React.FC<InputModalContainerProps> = (props) => {
   const gameData = GameData.useContainer();
 
   const addSaveState = async (name: string) => {
     let currentData = gameData.getGameStateObject(name);
-    console.log('gameData:' + JSON.stringify(currentData));
     try {
       AsyncStorage.getItem('saveStates', (error, result) => {
-        console.log('getItem result: ' + result);
-
         let toBeSaved: [SaveStateType];
         if (result) {
           let existingData = JSON.parse(result);
@@ -36,8 +32,11 @@ const InputModalContainer: React.FC<InputModalContainerProps> = (props) => {
               'Game was successfully saved.',
               ToastAndroid.SHORT
             );
-            console.log(error);
-            console.log('AsyncStorage: successfully merged saveState entry');
+            error
+              ? console.log(error)
+              : console.log(
+                  'AsyncStorage: successfully merged saveState entry'
+                );
           }
         );
       });
@@ -47,6 +46,7 @@ const InputModalContainer: React.FC<InputModalContainerProps> = (props) => {
     props.onOKPress();
   };
 
+  // Debug method to remove all save states
   const removeAll = () => {
     AsyncStorage.removeItem('saveStates', () => console.log('removed'));
   };
@@ -61,7 +61,7 @@ const InputModalContainer: React.FC<InputModalContainerProps> = (props) => {
   );
 };
 
-export default InputModalContainer;
+export default AddSaveStateContainer;
 
 const getDate = () => {
   let date = new Date();

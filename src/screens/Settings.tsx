@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  Alert,
-  ToastAndroid,
-  AsyncStorage,
-} from 'react-native';
+import { View, StyleSheet, Alert, AsyncStorage } from 'react-native';
 import { Linking } from 'expo';
 import colors from '../constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import { ScreenNameList } from '../constants/ParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
 import CustomListItem from '../components/CustomListItem';
-import InputModalContainer from '../components/InputModalContainer';
+import AddSaveStateContainer from '../components/AddSaveStateContainer';
 import GameData from '../stateContainers/GameData';
 
 let pkg = require('../../app.json');
@@ -93,7 +87,7 @@ const Settings: React.FC<SettingsProps> = () => {
 
   return (
     <View style={styles.container}>
-      <InputModalContainer
+      <AddSaveStateContainer
         visible={modalVisible}
         onCancelPress={() => setModalVisible(!modalVisible)}
         onOKPress={() => setModalVisible(!modalVisible)}

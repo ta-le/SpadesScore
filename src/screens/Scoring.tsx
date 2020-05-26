@@ -62,10 +62,6 @@ const Scoring: React.FC = (props) => {
     };
   });
 
-  useEffect(() => {
-    //console.log(bids, tricks);
-  }, [bids, tricks]);
-
   // check if bags exceed 10
   useEffect(() => {
     if (gameData.bags[0] >= 10) {
@@ -91,7 +87,7 @@ const Scoring: React.FC = (props) => {
       await AsyncStorage.setItem(
         'lastGameState',
         JSON.stringify(currentData),
-        () => console.log('lastGameState set: ' + JSON.stringify(currentData))
+        () => console.log('lastGameState set')
       );
     }
     updateLastGameState();

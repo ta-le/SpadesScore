@@ -73,7 +73,6 @@ const SaveStates: React.FC = () => {
         onPress: () => {
           let copy = [...saveStates];
           copy.splice(idx, 1);
-          console.log(copy);
           AsyncStorage.setItem('saveStates', JSON.stringify(copy), () =>
             fetch()
           );

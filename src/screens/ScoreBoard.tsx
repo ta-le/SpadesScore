@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ReactText } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import colors from '../constants/Colors';
 import GameData from '../stateContainers/GameData';
@@ -9,24 +9,23 @@ const ScoreBoard: React.FC = (props) => {
   // configure order of Player collumns here, (0,3) and (1,2) are team
   const order: number[] = [0, 3, 1, 2];
 
-  const renderCell: (
-    content: string | number,
-    teamNo: number,
-    separator?: boolean
-  ) => JSX.Element = (content, teamNo, separator) => {
+  const Cell: React.FC<{
+    content: string | number;
+    teamNo: number;
+    separator?: boolean;
+  }> = (props) => {
     return (
       <View
-        key={Math.random().toString()}
         style={[
           styles.cell,
           {
             backgroundColor:
-              teamNo === 1
+              props.teamNo === 1
                 ? colors.t1CardColor
-                : teamNo === 2
+                : props.teamNo === 2
                 ? colors.t2CardColor
                 : colors.backDropColor,
-            borderLeftWidth: separator ? 3 : styles.cell.borderLeftWidth,
+            borderLeftWidth: props.separator ? 3 : styles.cell.borderLeftWidth,
           },
         ]}
       >
@@ -35,51 +34,68 @@ const ScoreBoard: React.FC = (props) => {
             styles.cellText,
             {
               color:
-                teamNo === 1
+                props.teamNo === 1
                   ? colors.t1CardTextColor
-                  : teamNo === 2
+                  : props.teamNo === 2
                   ? colors.t2CardTextColor
                   : '#ddd',
             },
           ]}
         >
-          {content}
+          {props.content}
         </Text>
       </View>
     );
   };
 
-  const renderRow: (row: (string | number)[], idx: number) => JSX.Element = (
-    row,
-    idx
-  ) => {
+  const Row: React.FC<{
+    row: ReactText[]; //string | number[];
+    idx: number;
+  }> = (props) => {
     return (
-      <View key={`${idx}`} style={styles.rowContainer}>
+      <View key={`${props.idx}`} style={styles.rowContainer}>
         <View
-          style={{ alignItems: 'center', justifyContent: 'center', width: 25 }}
+          style={{ alignItems: 'center', justifyContent: 'center', width: 28 }}
         >
-          <Text style={styles.cellText}>{idx + 1}</Text>
+          <Text style={styles.cellText}>{props.idx + 1}</Text>
         </View>
 
-        {order.map((y) =>
-          renderCell(row[2 * y] + '/' + row[2 * y + 1], team(y))
-        )}
-        {renderCell(row[8], 1, true)}
-        {renderCell(row[9], 2)}
+        {order.map((y) => (
+          <Cell
+            key={`cell${props.idx}${y}`}
+            content={props.row[2 * y] + '/' + props.row[2 * y + 1]}
+            teamNo={team(y)}
+          />
+        ))}
+        <Cell content={props.row[8]} teamNo={1} separator={true} />
+        <Cell content={props.row[9]} teamNo={2} />
       </View>
     );
   };
 
-  const renderHeader: () => JSX.Element = () => {
+  const Header = () => {
     return (
-      <View style={styles.rowContainer}>
+      <View style={[styles.rowContainer, styles.headerRowContainer]}>
         <View
-          style={{ alignItems: 'center', justifyContent: 'center', width: 25 }}
+          style={{ alignItems: 'center', justifyContent: 'center', width: 28 }}
         >
           <Text style={styles.cellText}>#</Text>
         </View>
-        {order.map((y) => renderCell(gameData.names[y].substr(0, 8), team(y)))}
-        {[1, 2].map((n) => renderCell(`T${n} Points`, n, n === 1))}
+        {order.map((y) => (
+          <Cell
+            key={`headerCell${y}`}
+            content={gameData.names[y].substr(0, 8)}
+            teamNo={team(y)}
+          />
+        ))}
+        {[1, 2].map((n) => (
+          <Cell
+            key={`hedaerCell$${3 + n}`}
+            content={`T${n} Points`}
+            teamNo={n}
+            separator={n === 1}
+          />
+        ))}
       </View>
     );
   };
@@ -96,11 +112,11 @@ const ScoreBoard: React.FC = (props) => {
 
   return (
     <View style={styles.container}>
-      {renderHeader()}
+      <Header />
       <FlatList
         data={gameData.score}
         keyExtractor={(item, idx) => `r${idx}`}
-        renderItem={({ item, index }) => renderRow(item, index)}
+        renderItem={({ item, index }) => <Row row={item} idx={index} />}
         ListEmptyComponent={
           <View
             style={{
@@ -116,16 +132,16 @@ const ScoreBoard: React.FC = (props) => {
           </View>
         }
       />
-      <View
-        style={{
-          alignSelf: 'center',
-          width: '60%',
-          flexDirection: 'row',
-          marginTop: 1,
-        }}
-      >
-        {renderCell('total', -1)}
-        {[1, 2].map((n) => renderCell(getTotalScore(n), n, false))}
+      <View style={styles.totalContainer}>
+        <Cell content={'Total'} teamNo={-1} />
+        {[1, 2].map((n) => (
+          <Cell
+            key={`totalCell${n}`}
+            content={getTotalScore(n)}
+            teamNo={n}
+            separator={false}
+          />
+        ))}
       </View>
     </View>
   );
@@ -144,6 +160,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backDropColor,
     paddingTop: 5,
   },
+  headerRowContainer: {
+    borderBottomWidth: 3,
+  },
   rowContainer: {
     flexDirection: 'row',
     borderBottomWidth: 1,
@@ -159,6 +178,12 @@ const styles = StyleSheet.create({
   },
   cellText: {
     color: '#ddd',
+  },
+  totalContainer: {
+    alignSelf: 'center',
+    width: '60%',
+    flexDirection: 'row',
+    marginTop: 3,
   },
 });
 
