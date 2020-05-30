@@ -12,9 +12,13 @@ import CustomListItem from '../components/CustomListItem';
 import colors from '../constants/Colors';
 import { SaveStateType } from '../constants/SaveStateType';
 import GameData from '../stateContainers/GameData';
+import AlertModal from '../components/AlertModal';
 
 const SaveStates: React.FC = () => {
   const [saveStates, setSaveStates] = useState([]);
+  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+  const [loadModalVisible, setLoadModalVisible] = useState<boolean>(false);
+  const [indexPressed, setIndexPressed] = useState<number>(0);
 
   const gameData = GameData.useContainer();
 
@@ -46,43 +50,62 @@ const SaveStates: React.FC = () => {
   }, []);
 
   const loadSaveState = (idx: number) => {
-    Alert.alert('Warning', 'Load this save state? Current game will be lost.', [
-      {
-        text: 'Cancel',
-      },
-      {
-        text: 'Load',
-        onPress: () => {
-          gameData.loadSaveState(saveStates[idx]);
-          ToastAndroid.show(
-            'Game was successfully loaded.',
-            ToastAndroid.SHORT
-          );
-        },
-      },
-    ]);
+    gameData.loadSaveState(saveStates[idx]);
+    setLoadModalVisible(false);
+    ToastAndroid.show('Game was successfully loaded.', ToastAndroid.SHORT);
   };
 
   const deleteSaveState = (idx: number) => {
-    Alert.alert('Warning', 'Delete this save state?', [
-      {
-        text: 'Cancel',
-      },
-      {
-        text: 'Delete',
-        onPress: () => {
-          let copy = [...saveStates];
-          copy.splice(idx, 1);
-          AsyncStorage.setItem('saveStates', JSON.stringify(copy), () =>
-            fetch()
-          );
-        },
-      },
-    ]);
+    setDeleteModalVisible(false);
+    let copy = [...saveStates];
+    copy.splice(idx, 1);
+    AsyncStorage.setItem('saveStates', JSON.stringify(copy), () => {
+      fetch();
+    });
   };
 
+  const loadButtons: { title: string; onPress: () => void }[] = [
+    {
+      title: 'Cancel',
+      onPress: () => {
+        setLoadModalVisible(false);
+      },
+    },
+    {
+      title: 'Load',
+      onPress: () => {
+        loadSaveState(indexPressed);
+      },
+    },
+  ];
+
+  const deleteButtons: { title: string; onPress: () => void }[] = [
+    {
+      title: 'Cancel',
+      onPress: () => {
+        setDeleteModalVisible(false);
+      },
+    },
+    {
+      title: 'Delete',
+      onPress: () => {
+        deleteSaveState(indexPressed);
+      },
+    },
+  ];
   return (
     <View style={styles.container}>
+      <AlertModal
+        visible={loadModalVisible}
+        text='Load this save state? Current game will be lost.'
+        buttons={loadButtons}
+      />
+      <AlertModal
+        visible={deleteModalVisible}
+        text='Delete this save state?'
+        buttons={deleteButtons}
+      />
+
       <Text style={styles.sectionHeaderText}> Saved Game States </Text>
       {saveStates.map((item: SaveStateType, idx) => (
         <CustomListItem
@@ -105,7 +128,10 @@ const SaveStates: React.FC = () => {
                 color='white'
                 size={25}
                 containerStyle={{ marginRight: 16 }}
-                onPress={() => loadSaveState(idx)}
+                onPress={() => {
+                  setIndexPressed(idx);
+                  setLoadModalVisible(true);
+                }}
               />
               <Icon
                 name='delete'
@@ -113,7 +139,10 @@ const SaveStates: React.FC = () => {
                 color='white'
                 size={25}
                 containerStyle={{ marginRight: 8 }}
-                onPress={() => deleteSaveState(idx)}
+                onPress={() => {
+                  setIndexPressed(idx);
+                  setDeleteModalVisible(true);
+                }}
               />
             </View>
           }

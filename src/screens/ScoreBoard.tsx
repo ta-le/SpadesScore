@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, FlatList } from 'react-native';
 import colors from '../constants/Colors';
 import GameData from '../stateContainers/GameData';
 
+//TODO: implement ScoreBoard editing
 const ScoreBoard: React.FC = (props) => {
   let gameData = GameData.useContainer();
 

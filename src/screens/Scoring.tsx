@@ -8,6 +8,7 @@ import { ScreenNameList } from '../constants/ParamList';
 import { PlayerCard } from '../components/PlayerCard';
 import colors from '../constants/Colors';
 import GameData from '../stateContainers/GameData';
+import AlertModal from '../components/AlertModal';
 
 const window = Dimensions.get('window');
 
@@ -19,6 +20,7 @@ const Scoring: React.FC = (props) => {
 
   const [bids, setBids] = useState<string[]>(['-', '-', '-', '-']);
   const [tricks, setTricks] = useState<string[]>(['-', '-', '-', '-']);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const gameData = GameData.useContainer();
 
@@ -37,6 +39,7 @@ const Scoring: React.FC = (props) => {
           color='white'
           onPress={() => navigation.navigate('ScoreBoard')}
           containerStyle={{ marginRight: 15 }}
+          underlayColor={'rgba(255, 255, 255, 0.2)'}
         />
         <Icon
           name='settings'
@@ -44,7 +47,8 @@ const Scoring: React.FC = (props) => {
           size={30}
           color='white'
           onPress={() => navigation.navigate('Settings')}
-          containerStyle={{ marginRight: 10 }}
+          containerStyle={{ marginRight: 10, borderRadius: 30 }}
+          underlayColor={'rgba(255, 255, 255, 0.2)'}
         />
       </View>
     ),
@@ -103,7 +107,8 @@ const Scoring: React.FC = (props) => {
   // is called when hitting the finish round button. Calculates new points
   const finishRound = async () => {
     if (bids.includes('-') || tricks.includes('-')) {
-      alert('Fill in all Bids and Tricks before finishing the round.');
+      //alert('Fill in all Bids and Tricks before finishing the round.');
+      setModalVisible(true);
       return;
     }
 
@@ -207,6 +212,11 @@ const Scoring: React.FC = (props) => {
 
   return (
     <View style={styles.backDrop}>
+      <AlertModal
+        visible={modalVisible}
+        text='Fill in all bids and tricks before finishing the round.'
+        buttons={[{ title: 'OK', onPress: () => setModalVisible(false) }]}
+      />
       <View style={styles.container}>
         {[1, 2, 3, 4].map((i, idx) => (
           <PlayerCard
@@ -224,7 +234,7 @@ const Scoring: React.FC = (props) => {
             backgroundColor={
               team(idx) === 0 ? colors.t1CardColor : colors.t2CardColor
             }
-            textColor={
+            contentColor={
               team(idx) === 0 ? colors.t1CardTextColor : colors.t2CardTextColor
             }
             pointsHighlight={

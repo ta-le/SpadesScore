@@ -67,7 +67,7 @@ const Settings: React.FC<SettingsProps> = () => {
     },
     {
       title: 'Rate App',
-      subtitle: 'Give or change rating',
+      subtitle: 'If you like the app, plese consider leaving a review.',
       icon: {
         name: 'star',
         type: 'material-community',

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Modal, StyleSheet } from 'react-native';
+import { View, StyleSheet, StatusBar } from 'react-native';
+import Modal from 'react-native-modal';
 import colors from '../constants/Colors';
 import { Button, Input } from 'react-native-elements';
 
@@ -10,12 +11,16 @@ interface InputModalProps {
   placeHolder: string;
 }
 
-//TODO: migrate to react-native-modal for animations etc.
+//TODO: Refractor to use renderProps to combine InputModal and AlertModal
 const InputModal: React.FC<InputModalProps> = (props) => {
   const [input, setInput] = useState<string>(props.placeHolder);
 
   return (
-    <Modal visible={props.visible} transparent>
+    <Modal
+      isVisible={props.visible}
+      hideModalContentWhileAnimating
+      useNativeDriver
+    >
       <View style={styles.container}>
         <View style={styles.window}>
           <Input
@@ -29,7 +34,7 @@ const InputModal: React.FC<InputModalProps> = (props) => {
             inputContainerStyle={styles.inputContainer}
             inputStyle={styles.textInput}
           />
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+          <View style={styles.buttonContainer}>
             <Button
               title='Cancel'
               type='clear'
@@ -53,20 +58,15 @@ const InputModal: React.FC<InputModalProps> = (props) => {
 
 export default InputModal;
 
-const width = 290;
-const height = 160;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(20,20,20,0.4)',
   },
   window: {
     justifyContent: 'space-between',
-    height: height,
-    width: width,
+    width: '83%',
     paddingTop: 20,
     paddingBottom: 10,
     paddingHorizontal: 16,
@@ -91,10 +91,14 @@ const styles = StyleSheet.create({
   },
   textInput: {
     alignSelf: 'center',
-    width: width * 0.8,
     fontSize: 16,
     color: colors.textColor,
     paddingLeft: 5,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: 8,
   },
   button: {
     paddingLeft: 8,

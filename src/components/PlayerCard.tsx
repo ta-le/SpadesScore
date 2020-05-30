@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TextInput, Keyboard } from 'react-native';
 import { CustomDropdown } from './CustomDropdown';
 import GameData from '../stateContainers/GameData';
 import colors from '../constants/Colors';
@@ -8,20 +8,29 @@ interface PlayerCardProps {
   playerNumber: number;
   bidValue: string;
   tricksValue: string;
-  onChangeBid: (arg0: string) => void;
-  onChangeTricks: (arg0: string) => void;
+  onChangeBid?: (arg0: string) => void;
+  onChangeTricks?: (arg0: string) => void;
   points: number;
   bags: number;
   height: number;
   width: number;
   margin: number;
   backgroundColor?: string;
-  textColor?: string;
+  contentColor?: string;
   pointsHighlight?: string;
 }
 
 export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
   let gameData = GameData.useContainer();
+  let input = React.useRef(null);
+
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidHide', () => input.current.blur());
+
+    return () => {
+      Keyboard.removeAllListeners('keyboardDidHide');
+    };
+  }, []);
 
   return (
     <View
@@ -35,8 +44,14 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
         },
       ]}
     >
-      <View style={styles.headerContainer}>
+      <View
+        style={[
+          styles.headerContainer,
+          { borderBottomColor: props.contentColor },
+        ]}
+      >
         <TextInput
+          ref={input}
           autoCompleteType={'off'}
           autoCorrect={false}
           allowFontScaling={false}
@@ -48,7 +63,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
             styles.headingInput,
             {
               width: props.width - styles.container.paddingHorizontal * 2,
-              color: props.textColor,
+              color: props.contentColor,
             },
           ]}
         />
@@ -64,7 +79,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
           value={props.bidValue}
           onChangeText={(text) => props.onChangeBid(text)}
           containerStyle={{ marginRight: 5 }}
-          textColor={props.textColor}
+          textColor={props.contentColor}
         />
         <CustomDropdown
           label='Tricks'
@@ -74,7 +89,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
           value={props.tricksValue}
           onChangeText={(text) => props.onChangeTricks(text)}
           containerStyle={{ marginLeft: 5 }}
-          textColor={props.textColor}
+          textColor={props.contentColor}
         />
       </View>
 
@@ -85,10 +100,10 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
             { backgroundColor: props.pointsHighlight },
           ]}
         >
-          <Text style={[styles.pointsTextStyle, { color: props.textColor }]}>
+          <Text style={[styles.pointsTextStyle, { color: props.contentColor }]}>
             Points:
           </Text>
-          <Text style={[styles.pointsTextStyle, { color: props.textColor }]}>
+          <Text style={[styles.pointsTextStyle, { color: props.contentColor }]}>
             {props.points}
           </Text>
         </View>
@@ -98,10 +113,10 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
             { backgroundColor: props.pointsHighlight },
           ]}
         >
-          <Text style={[styles.pointsTextStyle, { color: props.textColor }]}>
+          <Text style={[styles.pointsTextStyle, { color: props.contentColor }]}>
             {'Bags:'}
           </Text>
-          <Text style={[styles.pointsTextStyle, { color: props.textColor }]}>
+          <Text style={[styles.pointsTextStyle, { color: props.contentColor }]}>
             {props.bags}
           </Text>
         </View>

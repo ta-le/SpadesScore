@@ -46,7 +46,8 @@ const App: React.FC = () => {
       <GameData.Provider initialState={gameState}>
         <StatusBar
           translucent
-          backgroundColor='transparent'
+          //backgroundColor='transparent'
+          backgroundColor='rgba(0,0,0,0.7)'
           barStyle='light-content'
         />
         <Routes />
