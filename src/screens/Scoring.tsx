@@ -11,6 +11,10 @@ import GameData from '../stateContainers/GameData';
 import AlertModal from '../components/AlertModal';
 
 const window = Dimensions.get('window');
+const ERROR_MESSAGES = {
+  unfinishedError: 'Fill in all bids and tricks before finishing the round.',
+  tricksError: 'Tricks have to add up to 13.',
+};
 
 const Scoring: React.FC = (props) => {
   const [dimensions, setDimensions] = useState({
@@ -21,6 +25,7 @@ const Scoring: React.FC = (props) => {
   const [bids, setBids] = useState<string[]>(['-', '-', '-', '-']);
   const [tricks, setTricks] = useState<string[]>(['-', '-', '-', '-']);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [modalText, setModalText] = useState<string>(null);
 
   const gameData = GameData.useContainer();
 
@@ -106,18 +111,25 @@ const Scoring: React.FC = (props) => {
 
   // is called when hitting the finish round button. Calculates new points
   const finishRound = async () => {
-    if (bids.includes('-') || tricks.includes('-')) {
-      //alert('Fill in all Bids and Tricks before finishing the round.');
-      setModalVisible(true);
-      return;
-    }
-
     // points and bags from this round
     let newPoints = [0, 0];
     let newBags = [0, 0];
 
     let iBids = bids.map((x) => parseInt(x));
     let iTricks = tricks.map((x) => parseInt(x));
+
+    if (bids.includes('-') || tricks.includes('-')) {
+      setModalText(ERROR_MESSAGES.unfinishedError);
+      setModalVisible(true);
+      return;
+    }
+
+    if (iTricks.reduce((x, y) => x + y) !== 13) {
+      console.log(iTricks.reduce((x, y) => x + y));
+      setModalText(ERROR_MESSAGES.tricksError);
+      setModalVisible(true);
+      return;
+    }
 
     // double zero and zero games
 
@@ -214,7 +226,7 @@ const Scoring: React.FC = (props) => {
     <View style={styles.backDrop}>
       <AlertModal
         visible={modalVisible}
-        text='Fill in all bids and tricks before finishing the round.'
+        text={modalText}
         buttons={[{ title: 'OK', onPress: () => setModalVisible(false) }]}
       />
       <View style={styles.container}>
