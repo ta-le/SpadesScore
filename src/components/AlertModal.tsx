@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     width: '90%',
     paddingTop: 20,
     paddingBottom: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 22,
     backgroundColor: colors.backDropColor,
     shadowColor: '#000',
     shadowOffset: {
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginTop: 5,
+    marginTop: 9,
   },
   button: {
     paddingLeft: 8,

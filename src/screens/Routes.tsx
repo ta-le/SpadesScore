@@ -19,7 +19,7 @@ export const Routes: React.FC<RoutesProps> = (props) => {
         initialRouteName='Scoring'
         screenOptions={{
           headerStyle: { backgroundColor: colors.headerColor },
-          headerTintColor: colors.headerTintColor,
+          headerTintColor: colors.headerContentColor,
         }}
       >
         <Stack.Screen name='Scoring' component={Scoring} options={{}} />

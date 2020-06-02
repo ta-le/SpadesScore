@@ -38,8 +38,8 @@ const Scoring: React.FC = (props) => {
     headerRight: () => (
       <View style={{ flexDirection: 'row' }}>
         <Icon
-          name='chart-bar'
-          type='material-community'
+          name='table'
+          type='antdesign'
           size={30}
           color='white'
           onPress={() => navigation.navigate('ScoreBoard')}
@@ -48,7 +48,7 @@ const Scoring: React.FC = (props) => {
         />
         <Icon
           name='settings'
-          type='material-community'
+          type='feather'
           size={30}
           color='white'
           onPress={() => navigation.navigate('Settings')}

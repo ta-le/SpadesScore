@@ -22,7 +22,7 @@ interface PlayerCardProps {
 
 export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
   let gameData = GameData.useContainer();
-  let input = React.useRef(null);
+  let input = useRef(null);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidHide', () => input.current.blur());
@@ -51,7 +51,9 @@ export const PlayerCard: React.FC<PlayerCardProps> = (props) => {
         ]}
       >
         <TextInput
-          ref={input}
+          ref={(ref) => {
+            input.current = ref;
+          }}
           autoCompleteType={'off'}
           autoCorrect={false}
           allowFontScaling={false}

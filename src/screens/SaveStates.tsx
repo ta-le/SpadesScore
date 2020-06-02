@@ -4,8 +4,8 @@ import {
   Text,
   View,
   StyleSheet,
-  Alert,
   ToastAndroid,
+  FlatList,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import CustomListItem from '../components/CustomListItem';
@@ -15,7 +15,7 @@ import GameData from '../stateContainers/GameData';
 import AlertModal from '../components/AlertModal';
 
 const SaveStates: React.FC = () => {
-  const [saveStates, setSaveStates] = useState([]);
+  const [saveStates, setSaveStates] = useState<SaveStateType[]>([]);
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
   const [loadModalVisible, setLoadModalVisible] = useState<boolean>(false);
   const [indexPressed, setIndexPressed] = useState<number>(0);
@@ -64,7 +64,7 @@ const SaveStates: React.FC = () => {
     });
   };
 
-  const loadButtons: { title: string; onPress: () => void }[] = [
+  const loadModalButtons: { title: string; onPress: () => void }[] = [
     {
       title: 'Cancel',
       onPress: () => {
@@ -79,7 +79,7 @@ const SaveStates: React.FC = () => {
     },
   ];
 
-  const deleteButtons: { title: string; onPress: () => void }[] = [
+  const deleteModalButtons: { title: string; onPress: () => void }[] = [
     {
       title: 'Cancel',
       onPress: () => {
@@ -98,56 +98,62 @@ const SaveStates: React.FC = () => {
       <AlertModal
         visible={loadModalVisible}
         text='Load this save state? Current game will be lost.'
-        buttons={loadButtons}
+        buttons={loadModalButtons}
       />
       <AlertModal
         visible={deleteModalVisible}
         text='Delete this save state?'
-        buttons={deleteButtons}
+        buttons={deleteModalButtons}
       />
 
       <Text style={styles.sectionHeaderText}> Saved Game States </Text>
-      {saveStates.map((item: SaveStateType, idx) => (
-        <CustomListItem
-          key={`state${idx}`}
-          title={item.name}
-          subtitle={
-            item.players.reduce(
-              (acc, curr, idx) => acc + curr + (idx !== 3 ? ', ' : ''),
-              'Players: '
-            ) +
-            '\n' +
-            `Rounds played: ${item.roundData.length}`
-          }
-          leftPadding={false}
-          rightIcon={
-            <View style={{ flexDirection: 'row' }}>
-              <Icon
-                name='content-save-edit'
-                type='material-community'
-                color='white'
-                size={25}
-                containerStyle={{ marginRight: 16 }}
-                onPress={() => {
-                  setIndexPressed(idx);
-                  setLoadModalVisible(true);
-                }}
-              />
-              <Icon
-                name='delete'
-                type='material-community'
-                color='white'
-                size={25}
-                containerStyle={{ marginRight: 8 }}
-                onPress={() => {
-                  setIndexPressed(idx);
-                  setDeleteModalVisible(true);
-                }}
-              />
-            </View>
-          }
-        />
-      ))}
+      <FlatList
+        data={saveStates}
+        keyExtractor={(item, index) => `saveState${index}`}
+        renderItem={({ item, index }) => (
+          <CustomListItem
+            key={`state${index}`}
+            title={item.name}
+            subtitle={
+              item.players.reduce(
+                (acc, curr, idx) => acc + curr + (idx !== 3 ? ', ' : ''),
+                'Players: '
+              ) +
+              '\n' +
+              `Rounds played: ${item.roundData.length}`
+            }
+            leftPadding={false}
+            rightIcon={
+              <View style={{ flexDirection: 'row' }}>
+                <Icon
+                  name='content-save-edit'
+                  type='material-community'
+                  color='white'
+                  size={25}
+                  containerStyle={{ marginRight: 16 }}
+                  underlayColor={'rgba(255, 255, 255, 0.2)'}
+                  onPress={() => {
+                    setIndexPressed(index);
+                    setLoadModalVisible(true);
+                  }}
+                />
+                <Icon
+                  name='delete'
+                  type='material-community'
+                  color='white'
+                  size={25}
+                  containerStyle={{ marginRight: 8 }}
+                  underlayColor={'rgba(255, 255, 255, 0.2)'}
+                  onPress={() => {
+                    setIndexPressed(index);
+                    setDeleteModalVisible(true);
+                  }}
+                />
+              </View>
+            }
+          />
+        )}
+      />
     </View>
   );
 };

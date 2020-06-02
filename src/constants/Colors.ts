@@ -1,5 +1,9 @@
 const colors = {
-  backDropColor: '#414141',
+  backDropColor: '#3d3d3d',
+
+  // navigation
+  headerColor: '#ca3e47',
+  headerContentColor: '#fff',
 
   // PlayerCard
   t1CardColor: '#585858',
@@ -8,24 +12,19 @@ const colors = {
   t2CardTextColor: '#222',
   t1PointsHighlight: '#606060',
   t2PointsHighlight: '#ffe9d9',
-  cardHeaderBackgroundColor: '#ca3e47',
-  cardHeaderFontColor: '#d8d8d8',
-  headerColor: '#ca3e47',
-  headerTintColor: '#fff',
+
+  // Scoring
   finishButtonColor: '#ca3e47',
 
+  // ScoreBoard
+  horizontalBorderColor: '#303030',
+
   // CustomListItem
-  textColor: '#d8d8d8',
+  textColor: '#dddddd',
   subTextColor: '#b5b5b5',
-  dropdownBaseColor: '#ddd',
-  dropdownPickerBackgroundColor: '#414141',
 
   // Settings sections
   sectionTextColor: '#ca3e47',
-
-  // ScoreBoard
-  t1Color: '#585858',
-  t2Color: '#f1f1f1',
 };
 
 export default colors;

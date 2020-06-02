@@ -5,10 +5,11 @@ import colors from '../constants/Colors';
 import { Button, Input } from 'react-native-elements';
 
 interface InputModalProps {
+  label: string;
   visible: boolean;
   onCancelPress: () => void;
   onOKPress: (input: string) => void;
-  placeHolder: string;
+  placeHolder?: string;
 }
 
 //TODO: Refractor to use renderProps to combine InputModal and AlertModal
@@ -24,9 +25,9 @@ const InputModal: React.FC<InputModalProps> = (props) => {
       <View style={styles.container}>
         <View style={styles.window}>
           <Input
-            label='Enter a name for the save state.'
+            label={props.label}
             labelStyle={styles.headLine}
-            selectTextOnFocus={true}
+            selectTextOnFocus
             maxLength={15}
             returnKeyType={'send'}
             value={input}

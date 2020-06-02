@@ -1,16 +1,13 @@
 import React from 'react';
 import { AsyncStorage, ToastAndroid } from 'react-native';
 import GameData from '../stateContainers/GameData';
-import InputModal from './InputModal';
 import { SaveStateType } from '../constants/SaveStateType';
 
-interface InputModalContainerProps {
-  visible: boolean;
-  onCancelPress: () => void;
-  onOKPress: () => void;
+interface AddSaveStateContainerProps {
+  render: (addSaveState) => JSX.Element;
 }
 
-const AddSaveStateContainer: React.FC<InputModalContainerProps> = (props) => {
+const AddSaveStateContainer: React.FC<AddSaveStateContainerProps> = (props) => {
   const gameData = GameData.useContainer();
 
   const addSaveState = async (name: string) => {
@@ -43,7 +40,6 @@ const AddSaveStateContainer: React.FC<InputModalContainerProps> = (props) => {
     } catch (error) {
       console.log('Error while setting item in AsyncStorage.');
     }
-    props.onOKPress();
   };
 
   // Debug method to remove all save states
@@ -51,19 +47,7 @@ const AddSaveStateContainer: React.FC<InputModalContainerProps> = (props) => {
     AsyncStorage.removeItem('saveStates', () => console.log('removed'));
   };
 
-  return (
-    <InputModal
-      visible={props.visible}
-      placeHolder={getDate()}
-      onCancelPress={() => props.onCancelPress()}
-      onOKPress={(input) => addSaveState(input)}
-    />
-  );
+  return props.render(addSaveState);
 };
 
 export default AddSaveStateContainer;
-
-const getDate = () => {
-  let date = new Date();
-  return `${date.getFullYear()}/${date.getUTCMonth() + 1}/${date.getUTCDate()}`;
-};

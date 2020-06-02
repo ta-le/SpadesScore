@@ -13,6 +13,7 @@ const CustomListItem: React.FC<CustomListItemProps> = (props) => {
       titleStyle={{
         color: colors.textColor,
         fontSize: 17,
+        fontWeight: 'normal',
         paddingLeft: props.leftPadding ? 13 : 0,
       }}
       subtitleStyle={{

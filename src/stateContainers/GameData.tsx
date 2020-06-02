@@ -14,7 +14,7 @@ function useGameState(lastGameState: SaveStateType) {
     setScore((score) => score.concat([line]));
   };
 
-  let editScore = (lineNumber: number, line: (number | string)[]) =>
+  let editEntry = (lineNumber: number, line: (number | string)[]) =>
     setScore(score.splice(lineNumber, 1, line));
 
   // Player names
@@ -42,21 +42,21 @@ function useGameState(lastGameState: SaveStateType) {
     setBags(saveState.bags);
   };
 
-  let getGameStateObject = (saveStateName: string) => {
+  // returns a game state object with all information (not of SaveStateType)
+  let getGameStateObject: (name: string) => SaveStateType = (saveStateName) => {
     return {
       name: saveStateName,
       roundData: score,
       players: names,
       points: points,
       bags: bags,
-    };
+    } as SaveStateType;
   };
 
   return {
     score,
-    setScore,
     addScoreLine,
-    editScore,
+    editScore: editEntry,
     names,
     setName,
     points,
