@@ -71,37 +71,6 @@ const Scoring: React.FC = (props) => {
     };
   });
 
-  // check if bags exceed 10
-  useEffect(() => {
-    if (gameData.bags[0] >= 10) {
-      gameData.setPoints([gameData.points[0] - 100, gameData.points[1]]);
-      gameData.setBags([gameData.bags[0] - 10, gameData.bags[1]]);
-
-      gameData.setPoints([gameData.points[0] - 100, gameData.points[1]]);
-      gameData.setBags([gameData.bags[0] - 10, gameData.bags[1]]);
-    }
-    if (gameData.bags[1] >= 10) {
-      gameData.setPoints([gameData.points[0], gameData.points[1] - 100]);
-      gameData.setBags([gameData.bags[0], gameData.bags[1] - 10]);
-      gameData.setPoints([gameData.points[0], gameData.points[1] - 100]);
-      gameData.setBags([gameData.bags[0], gameData.bags[1] - 10]);
-    }
-  }, [gameData.bags]);
-
-  useEffect(() => {
-    // update AsyncStorage lastGameState
-    async function updateLastGameState() {
-      let currentData = gameData.getGameStateObject('last');
-
-      await AsyncStorage.setItem(
-        'lastGameState',
-        JSON.stringify(currentData),
-        () => console.log('lastGameState set')
-      );
-    }
-    updateLastGameState();
-  }, [gameData.points]);
-
   // get team from index
   const team = (i) => {
     if (i === 0 || i === 3) return 0;
@@ -125,7 +94,6 @@ const Scoring: React.FC = (props) => {
     }
 
     if (iTricks.reduce((x, y) => x + y) !== 13) {
-      console.log(iTricks.reduce((x, y) => x + y));
       setModalText(ERROR_MESSAGES.tricksError);
       setModalVisible(true);
       return;
@@ -183,14 +151,6 @@ const Scoring: React.FC = (props) => {
     line.push(newPoints[0] + newBags[0]);
     line.push(newPoints[1] + newBags[1]);
     gameData.addScoreLine(line);
-
-    // update points and bags
-
-    gameData.setPoints(nextPoints);
-    gameData.setBags([
-      gameData.bags[0] + newBags[0],
-      gameData.bags[1] + newBags[1],
-    ]);
 
     // reset bid and tricks dropdowns
 

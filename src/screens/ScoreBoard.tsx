@@ -8,16 +8,21 @@ import {
   TouchableWithoutFeedback,
   TouchableNativeFeedback,
 } from 'react-native';
-import colors from '../constants/Colors';
-import GameData from '../stateContainers/GameData';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { ScreenNameList } from '../constants/ParamList';
-import { useNavigation } from '@react-navigation/native';
 import { Icon, Button } from 'react-native-elements';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
+import GameData from '../stateContainers/GameData';
+import { ScreenNameList } from '../constants/ParamList';
+import colors from '../constants/Colors';
+import Cell from '../components/Cell';
+import AlertModal from '../components/AlertModal';
 
 const ScoreBoard: React.FC = (props) => {
   const [editModeEnabled, setEditModeEnabled] = useState<boolean>(false);
+  const [deleteWarningModalVisible, setDeleteWarningModalVisible] = useState<
+    boolean
+  >(false);
 
   let gameData = GameData.useContainer();
 
@@ -58,45 +63,6 @@ const ScoreBoard: React.FC = (props) => {
 
   // configure order of Player collumns here, (0,3) and (1,2) are team
   const order: number[] = [0, 3, 1, 2];
-
-  const Cell: React.FC<{
-    content: string | number;
-    teamNo: number;
-    separator?: boolean;
-  }> = (props) => {
-    return (
-      <View
-        style={[
-          styles.cell,
-          {
-            backgroundColor:
-              props.teamNo === 1
-                ? colors.t1CardColor
-                : props.teamNo === 2
-                ? colors.t2CardColor
-                : colors.backDropColor,
-            borderLeftWidth: props.separator ? 3 : styles.cell.borderLeftWidth,
-          },
-        ]}
-      >
-        <Text
-          style={[
-            styles.cellText,
-            {
-              color:
-                props.teamNo === 1
-                  ? colors.t1CardTextColor
-                  : props.teamNo === 2
-                  ? colors.t2CardTextColor
-                  : '#ddd',
-            },
-          ]}
-        >
-          {props.content}
-        </Text>
-      </View>
-    );
-  };
 
   const Header = () => {
     return (
@@ -150,15 +116,18 @@ const ScoreBoard: React.FC = (props) => {
           <Cell content={props.row[9]} teamNo={2} />
           <BlurView
             tint='dark'
-            intensity={props.selected ? 50 : 0}
-            style={[StyleSheet.absoluteFill]}
+            intensity={props.selected ? 60 : 0}
+            style={[
+              StyleSheet.absoluteFill,
+              { borderWidth: props.selected ? 1 : 0 },
+            ]}
           />
         </View>
       </TouchableWithoutFeedback>
     );
   };
 
-  const getTotalScore: (teamNo: number) => number = (teamNo) => {
+  const getTotalScore: (teamNo: 1 | 2) => number = (teamNo) => {
     let result = gameData.score.reduce((acc, curr) => {
       let res = acc;
       if ((acc % 10) + ((curr[8 + (teamNo - 1)] as number) % 10) >= 10)
@@ -184,15 +153,50 @@ const ScoreBoard: React.FC = (props) => {
     }
   };
 
-  //TODO: implement Edit and Delete
-  const handleEditPress: (input: string) => void = (input) => {};
-  const handleDeletePress: (input: string) => void = (input) => {};
+  //TODO: implement Edit
+  const handleEditPress: (selected: boolean[]) => void = (selected) => {
+    // opens a modal with PlayerCards to input scores
+  };
+
+  const handleDeletePress: (selected: boolean[]) => void = (selected) => {
+    gameData.deleteScoreLines(selected);
+    setSelectedRows(Array(gameData.score.length).fill(false));
+    setDeleteWarningModalVisible(false);
+  };
 
   return (
     <View style={styles.container}>
+      <AlertModal
+        text='Delete selected rows(s)?'
+        visible={deleteWarningModalVisible}
+        buttons={[
+          {
+            title: 'Cancel',
+            onPress: () => setDeleteWarningModalVisible(false),
+          },
+          { title: 'Delete', onPress: () => handleDeletePress(selectedRows) },
+        ]}
+      />
       {editModeEnabled && (
-        <View style={styles.editModeHeadline}>
-          <Text style={styles.editModeText}> Tap row to edit / delete</Text>
+        <View style={styles.editModeRowContainer}>
+          <Text style={styles.editModeText}> Select rows to delete </Text>
+          {selectedRows.includes(true) && (
+            <View style={styles.editModeButtons}>
+              {/* <Button
+                title='Edit'
+                type='outline'
+                onPress={() => handleEditPress(selectedRows)}
+              /> */}
+              <Button
+                title='Delete'
+                type='outline'
+                onPress={() => setDeleteWarningModalVisible(true)}
+                containerStyle={{ marginLeft: 15, borderColor: 'red' }}
+                buttonStyle={{ borderColor: 'red' }}
+                titleStyle={{ color: 'red' }}
+              />
+            </View>
+          )}
         </View>
       )}
       <Header />
@@ -216,10 +220,10 @@ const ScoreBoard: React.FC = (props) => {
       />
       <View style={styles.totalContainer}>
         <Cell content={'Total'} teamNo={-1} />
-        {[1, 2].map((n) => (
+        {[1, 2].map((n: 1 | 2) => (
           <Cell
             key={`totalCell${n}`}
-            content={getTotalScore(n)}
+            content={gameData.points[n - 1]}
             teamNo={n}
             separator={false}
           />
@@ -250,14 +254,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: colors.horizontalBorderColor, //colors.backDropColor,
   },
-  cell: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 50,
-    borderLeftWidth: 1,
-    borderColor: colors.backDropColor,
-  },
   cellText: {
     color: '#ddd',
   },
@@ -272,8 +268,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 3,
   },
-  editModeHeadline: {
+  editModeRowContainer: {
     paddingHorizontal: 25,
+    paddingVertical: 8,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -285,6 +282,11 @@ const styles = StyleSheet.create({
     paddingRight: 25,
     fontWeight: 'bold',
     fontSize: 17,
+  },
+  editModeButtons: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   emptyListTextContainer: {
     flex: 1,

@@ -28,14 +28,14 @@ const SaveStates: React.FC = () => {
       const parsed: [] = JSON.parse(fetched);
 
       //DEBUG
-      console.log(
+      /* console.log(
         `Fetched ${parsed.length} game states: ${parsed.reduce(
           (acc, curr: any) => {
             return acc + curr.name + ', ';
           },
           ''
         )}`
-      );
+      ); */
 
       if (fetched) {
         setSaveStates(JSON.parse(fetched));
@@ -120,7 +120,7 @@ const SaveStates: React.FC = () => {
                 'Players: '
               ) +
               '\n' +
-              `Rounds played: ${item.roundData.length}`
+              `Rounds played: ${item.score.length}`
             }
             leftPadding={false}
             rightIcon={

@@ -22,10 +22,26 @@ export const Routes: React.FC<RoutesProps> = (props) => {
           headerTintColor: colors.headerContentColor,
         }}
       >
-        <Stack.Screen name='Scoring' component={Scoring} options={{}} />
-        <Stack.Screen name='ScoreBoard' component={ScoreBoard} />
-        <Stack.Screen name='Settings' component={Settings} />
-        <Stack.Screen name='SaveStates' component={SaveStates} />
+        <Stack.Screen
+          name='Scoring'
+          component={Scoring}
+          options={{ title: 'Scoring' }}
+        />
+        <Stack.Screen
+          name='ScoreBoard'
+          component={ScoreBoard}
+          options={{ title: 'Score Board' }}
+        />
+        <Stack.Screen
+          name='Settings'
+          component={Settings}
+          options={{ title: 'Settings' }}
+        />
+        <Stack.Screen
+          name='SaveStates'
+          component={SaveStates}
+          options={{ title: 'Save States' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

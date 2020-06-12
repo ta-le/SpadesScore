@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { AppLoading } from 'expo';
-import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { Routes } from './src/screens/Routes';
 import { YellowBox, AsyncStorage, StatusBar } from 'react-native';
@@ -13,7 +12,7 @@ console.ignoredYellowBox = ['Warning:'];
 const App: React.FC = () => {
   const [isReady, setReady] = useState(false);
   const [gameState, setGameState] = useState<SaveStateType>({
-    roundData: [],
+    score: [],
     players: [1, 2, 3, 4].map((x) => `Player ${x}`),
     points: [0, 0],
     bags: [0, 0],
@@ -29,9 +28,10 @@ const App: React.FC = () => {
         }
       });
     }
-
     await loadGameState();
-    //return Promise.all([loadFonts(), loadGameState()]);
+
+    // Debug:
+    //await AsyncStorage.removeItem('lastGameState');
   };
 
   if (!isReady)

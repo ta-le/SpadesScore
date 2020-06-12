@@ -1,6 +1,6 @@
 export type SaveStateType = {
   name?: string;
-  roundData: (string | number)[][];
+  score: (string | number)[][];
   players: string[];
   points: number[];
   bags: number[];

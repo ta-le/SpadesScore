@@ -68,7 +68,8 @@ const Settings: React.FC<SettingsProps> = () => {
       },
       onPress: () => navigation.navigate('SaveStates'),
     },
-    {
+    // TODO: implement thresholds and alert when one team wins
+    /*     {
       title: 'Set point thresholds',
       subtitle:
         'Set the number of points a team has to reach to win or below which they lose',
@@ -77,7 +78,7 @@ const Settings: React.FC<SettingsProps> = () => {
         type: 'material-community',
       },
       onPress: () => {},
-    },
+    }, */
     {
       title: 'Rate App',
       subtitle: 'If you like the app, plese consider leaving a review.',
